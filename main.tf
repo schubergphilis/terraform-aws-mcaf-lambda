@@ -41,6 +41,7 @@ resource "aws_lambda_function" "default" {
   runtime       = var.runtime
   role          = module.lambda_role.arn
   tags          = var.tags
+  timeout       = var.timeout
 
   environment {
     variables = var.environment

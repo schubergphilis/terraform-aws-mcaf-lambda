@@ -38,6 +38,12 @@ variable "environment" {
   description = "A map of environment variables to assign to the lambda"
 }
 
+variable "timeout" {
+  type        = number
+  default     = 5
+  description = "The timeout of the lambda"
+}
+
 variable "tags" {
   type        = map(string)
   description = "A mapping of tags to assign to the bucket"

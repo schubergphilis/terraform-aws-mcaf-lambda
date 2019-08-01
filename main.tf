@@ -6,7 +6,7 @@ module lambda_role {
   source                = "github.com/schubergphilis/terraform-aws-mcaf-role?ref=v0.1.2"
   name                  = local.role_name
   principal_type        = "Service"
-  principal_identifiers = ["lambda.amazonaws.com"]
+  principal_identifiers = var.principal_identifiers
   policy                = var.policy
   tags                  = var.tags
 }

@@ -26,6 +26,12 @@ variable policy {
   description = "A valid lambda policy JSON document"
 }
 
+variable principal_identifiers {
+  type        = list(string)
+  description = "Role principal identifiers"
+  default     = ["lambda.amazonaws.com"]
+}
+
 variable cloudwatch_logs {
   type        = bool
   default     = true

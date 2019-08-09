@@ -3,7 +3,7 @@ locals {
   filename    = var.filename != null ? var.filename : data.archive_file.dummy.output_path
   region      = var.region != null ? var.region : data.aws_region.current.name
 
-  assume_role = replace(data.aws_caller_identity.current.arn, "assumed-role", "") != data.aws_caller_identity.current.arn ? { create : true } : {}
+  assume_role = var.assume_role ? { create : true } : {}
   assume_role_arn = format(
     "arn:aws:iam::%s:role/%s",
     data.aws_caller_identity.current.account_id,

@@ -9,6 +9,12 @@ variable "description" {
   description = "A description of the lambda"
 }
 
+variable "assume_role" {
+  type        = bool
+  default     = false
+  description = "Whether or not to dynamically re-assume the role using the current account"
+}
+
 variable "filename" {
   type        = string
   default     = null

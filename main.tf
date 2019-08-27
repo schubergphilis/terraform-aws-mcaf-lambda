@@ -10,6 +10,10 @@ locals {
     data.aws_caller_identity.current.account_id,
     split("/", data.aws_caller_identity.current.arn)[1]
   )
+
+  execution_policy_arn = var.subnet_ids != null ?
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole" :
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
 data "aws_region" "current" {}
@@ -53,7 +57,7 @@ resource "aws_iam_role_policy_attachment" "default" {
   count      = var.cloudwatch_logs ? 1 : 0
   provider   = aws.lambda
   role       = module.lambda_role.id
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+  policy_arn = local.execution_policy_arn
 }
 
 data "archive_file" "dummy" {

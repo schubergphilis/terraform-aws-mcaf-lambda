@@ -14,6 +14,11 @@ locals {
 
 data "aws_region" "current" {}
 data "aws_caller_identity" "current" {}
+data "aws_subnet" "default" {
+  provider = aws.lambda
+  count    = var.subnet_ids != null ? 1 : 0
+  id       = var.subnet_ids[0]
+}
 
 provider "aws" {
   alias  = "lambda"
@@ -39,12 +44,14 @@ module "lambda_role" {
 
 resource "aws_cloudwatch_log_group" "default" {
   count             = var.cloudwatch_logs ? 1 : 0
+  provider          = aws.lambda
   name              = "/aws/lambda/${var.name}"
   retention_in_days = 14
 }
 
 resource "aws_iam_role_policy_attachment" "default" {
   count      = var.cloudwatch_logs ? 1 : 0
+  provider   = aws.lambda
   role       = module.lambda_role.id
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
@@ -59,12 +66,8 @@ data "archive_file" "dummy" {
   }
 }
 
-data "aws_subnet" "default" {
-  count = var.subnet_ids != null ? 1 : 0
-  id    = var.subnet_ids[0]
-}
-
 resource "aws_security_group" "default" {
+  provider    = aws.lambda
   count       = var.subnet_ids != null ? 1 : 0
   name        = var.name
   description = "Security group for lambda ${var.name}"

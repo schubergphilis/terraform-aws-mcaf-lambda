@@ -1,5 +1,6 @@
 locals {
   environment = var.environment != null ? { create : true } : {}
+  execution_type = var.subnet_ids != null ? "VPCAccess" : "Basic"
   filename    = var.filename != null ? var.filename : data.archive_file.dummy.output_path
   region      = var.region != null ? var.region : data.aws_region.current.name
   vpc_config  = var.subnet_ids != null ? { create : true } : {}
@@ -10,10 +11,6 @@ locals {
     data.aws_caller_identity.current.account_id,
     split("/", data.aws_caller_identity.current.arn)[1]
   )
-
-  execution_policy_arn = var.subnet_ids != null ?
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole" :
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
 data "aws_region" "current" {}
@@ -57,7 +54,7 @@ resource "aws_iam_role_policy_attachment" "default" {
   count      = var.cloudwatch_logs ? 1 : 0
   provider   = aws.lambda
   role       = module.lambda_role.id
-  policy_arn = local.execution_policy_arn
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambda${local.execution_type}ExecutionRole"
 }
 
 data "archive_file" "dummy" {

@@ -11,7 +11,7 @@ variable "description" {
 
 variable "assume_role" {
   type        = bool
-  default     = false
+  default     = true
   description = "Whether or not to dynamically re-assume the role using the current account"
 }
 

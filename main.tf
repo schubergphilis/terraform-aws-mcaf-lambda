@@ -2,6 +2,7 @@ locals {
   environment = var.environment != null ? { create : true } : {}
   filename    = var.filename != null ? var.filename : data.archive_file.dummy.output_path
   region      = var.region != null ? var.region : data.aws_region.current.name
+  vpc_config  = var.subnet_ids != null ? { create : true } : {}
 
   assume_role = var.assume_role ? { create : true } : {}
   assume_role_arn = format(
@@ -58,6 +59,31 @@ data "archive_file" "dummy" {
   }
 }
 
+data "aws_subnet" "default" {
+  count = var.subnet_ids != null ? 1 : 0
+  id    = var.subnet_ids[0]
+}
+
+resource "aws_security_group" "default" {
+  count       = var.subnet_ids != null ? 1 : 0
+  name        = var.name
+  description = "Security group for lambda ${var.name}"
+  vpc_id      = data.aws_subnet.default.vpc_id
+  tags        = var.tags
+
+  egress {
+    description = "All outbound traffic"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
 resource "aws_lambda_function" "default" {
   provider      = aws.lambda
   function_name = var.name
@@ -69,6 +95,14 @@ resource "aws_lambda_function" "default" {
   publish       = var.publish
   tags          = var.tags
   timeout       = var.timeout
+
+  dynamic vpc_config {
+    for_each = local.vpc_config
+    content {
+      subnet_ids         = var.subnet_ids
+      security_group_ids = [aws_security_group.default[0].id]
+    }
+  }
 
   dynamic environment {
     for_each = local.environment

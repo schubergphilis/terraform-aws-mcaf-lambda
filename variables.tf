@@ -68,6 +68,12 @@ variable "timeout" {
   description = "The timeout of the lambda"
 }
 
+variable "subnet_ids" {
+  type        = list(string)
+  default     = null
+  description = "The subnet ids where this lambda needs to run"
+}
+
 variable "tags" {
   type        = map(string)
   description = "A mapping of tags to assign to the bucket"

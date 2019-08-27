@@ -1,9 +1,9 @@
 locals {
-  environment = var.environment != null ? { create : true } : {}
-  execution_type = var.subnet_ids != null ? "VPCAccess" : "Basic"
-  filename    = var.filename != null ? var.filename : data.archive_file.dummy.output_path
-  region      = var.region != null ? var.region : data.aws_region.current.name
-  vpc_config  = var.subnet_ids != null ? { create : true } : {}
+  environment    = var.environment != null ? { create : true } : {}
+  execution_type = var.subnet_ids == null ? "Basic" : "VPCAccess"
+  filename       = var.filename != null ? var.filename : data.archive_file.dummy.output_path
+  region         = var.region != null ? var.region : data.aws_region.current.name
+  vpc_config     = var.subnet_ids != null ? { create : true } : {}
 
   assume_role = var.assume_role ? { create : true } : {}
   assume_role_arn = format(
@@ -15,11 +15,6 @@ locals {
 
 data "aws_region" "current" {}
 data "aws_caller_identity" "current" {}
-data "aws_subnet" "default" {
-  provider = aws.lambda
-  count    = var.subnet_ids != null ? 1 : 0
-  id       = var.subnet_ids[0]
-}
 
 provider "aws" {
   alias  = "lambda"
@@ -44,27 +39,23 @@ module "lambda_role" {
 }
 
 resource "aws_cloudwatch_log_group" "default" {
-  count             = var.cloudwatch_logs ? 1 : 0
   provider          = aws.lambda
+  count             = var.cloudwatch_logs ? 1 : 0
   name              = "/aws/lambda/${var.name}"
   retention_in_days = 14
 }
 
 resource "aws_iam_role_policy_attachment" "default" {
-  count      = var.cloudwatch_logs ? 1 : 0
   provider   = aws.lambda
+  count      = var.cloudwatch_logs ? 1 : 0
   role       = module.lambda_role.id
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambda${local.execution_type}ExecutionRole"
 }
 
-data "archive_file" "dummy" {
-  type        = "zip"
-  output_path = "${path.module}/dummy_payload.zip"
-
-  source {
-    content  = "dummy payload"
-    filename = "dummy.txt"
-  }
+data "aws_subnet" "selected" {
+  provider = aws.lambda
+  count    = var.subnet_ids != null ? 1 : 0
+  id       = var.subnet_ids[0]
 }
 
 resource "aws_security_group" "default" {
@@ -72,7 +63,7 @@ resource "aws_security_group" "default" {
   count       = var.subnet_ids != null ? 1 : 0
   name        = var.name
   description = "Security group for lambda ${var.name}"
-  vpc_id      = data.aws_subnet.default[0].vpc_id
+  vpc_id      = data.aws_subnet.selected[0].vpc_id
   tags        = var.tags
 
   egress {
@@ -82,9 +73,15 @@ resource "aws_security_group" "default" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+}
 
-  lifecycle {
-    create_before_destroy = true
+data "archive_file" "dummy" {
+  type        = "zip"
+  output_path = "${path.module}/dummy_payload.zip"
+
+  source {
+    content  = "dummy payload"
+    filename = "dummy.txt"
   }
 }
 

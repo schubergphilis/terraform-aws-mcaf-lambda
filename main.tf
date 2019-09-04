@@ -2,15 +2,11 @@ locals {
   environment    = var.environment != null ? { create : true } : {}
   execution_type = var.subnet_ids == null ? "Basic" : "VPCAccess"
   filename       = var.filename != null ? var.filename : data.archive_file.dummy.output_path
-  region         = var.region != null ? var.region : data.aws_region.current.name
   vpc_config     = var.subnet_ids != null ? { create : true } : {}
 }
 
-data "aws_region" "current" {}
-data "aws_caller_identity" "current" {}
-
 provider "aws" {
-  alias  = "lambda"
+  alias = "lambda"
 }
 
 module "lambda_role" {

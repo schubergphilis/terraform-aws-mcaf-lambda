@@ -9,12 +9,6 @@ variable "description" {
   description = "A description of the lambda"
 }
 
-variable "assume_role" {
-  type        = bool
-  default     = true
-  description = "Whether or not to dynamically re-assume the role using the current account"
-}
-
 variable "filename" {
   type        = string
   default     = null
@@ -42,12 +36,6 @@ variable "publish" {
   type        = bool
   default     = false
   description = "Whether to publish creation/change as new lambda function version"
-}
-
-variable "region" {
-  type        = string
-  default     = null
-  description = "The region this lambda should reside in, defaults to the region used by the callee"
 }
 
 variable "cloudwatch_logs" {

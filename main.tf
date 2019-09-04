@@ -4,13 +4,6 @@ locals {
   filename       = var.filename != null ? var.filename : data.archive_file.dummy.output_path
   region         = var.region != null ? var.region : data.aws_region.current.name
   vpc_config     = var.subnet_ids != null ? { create : true } : {}
-
-  assume_role = var.assume_role ? { create : true } : {}
-  assume_role_arn = format(
-    "arn:aws:iam::%s:role/%s",
-    data.aws_caller_identity.current.account_id,
-    split("/", data.aws_caller_identity.current.arn)[1]
-  )
 }
 
 data "aws_region" "current" {}
@@ -18,15 +11,6 @@ data "aws_caller_identity" "current" {}
 
 provider "aws" {
   alias  = "lambda"
-  region = local.region
-
-  dynamic assume_role {
-    for_each = local.assume_role
-
-    content {
-      role_arn = local.assume_role_arn
-    }
-  }
 }
 
 module "lambda_role" {

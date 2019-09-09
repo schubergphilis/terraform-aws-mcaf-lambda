@@ -27,9 +27,16 @@ variable "runtime" {
   description = "The function runtime to use"
 }
 
+variable "role_arn" {
+  type        = string
+  default     = null
+  description = "An optional lambda execution role"
+}
+
 variable "policy" {
   type        = string
-  description = "A valid lambda policy JSON document"
+  default     = null
+  description = "A valid lambda policy JSON document. Required if you don't specify a role_arn"
 }
 
 variable "publish" {

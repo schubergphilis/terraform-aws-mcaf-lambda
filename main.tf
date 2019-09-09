@@ -9,13 +9,30 @@ provider "aws" {
   alias = "lambda"
 }
 
-module "lambda_role" {
-  source                = "github.com/schubergphilis/terraform-aws-mcaf-role?ref=v0.1.2"
-  name                  = "LambdaRole-${var.name}"
-  principal_type        = "Service"
-  principal_identifiers = ["lambda.amazonaws.com", "edgelambda.amazonaws.com"]
-  policy                = var.policy
-  tags                  = var.tags
+data "aws_iam_policy_document" "default" {
+  statement {
+    actions = [
+      "sts:AssumeRole"
+    ]
+    principals {
+      type        = "Service"
+      identifiers = ["lambda.amazonaws.com", "edgelambda.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_role" "default" {
+  count              = var.role_arn == null ? 1 : 0
+  name               = "LambdaRole-${var.name}"
+  assume_role_policy = data.aws_iam_policy_document.default.json
+  tags               = var.tags
+}
+
+resource "aws_iam_role_policy" "default" {
+  count  = var.role_arn == null ? 1 : 0
+  name   = "LambdaRole-${var.name}"
+  role   = aws_iam_role.default[0].id
+  policy = var.policy
 }
 
 resource "aws_cloudwatch_log_group" "default" {
@@ -27,8 +44,8 @@ resource "aws_cloudwatch_log_group" "default" {
 
 resource "aws_iam_role_policy_attachment" "default" {
   provider   = aws.lambda
-  count      = var.cloudwatch_logs ? 1 : 0
-  role       = module.lambda_role.id
+  count      = var.role_arn == null && var.cloudwatch_logs ? 1 : 0
+  role       = aws_iam_role.default[0].id
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambda${local.execution_type}ExecutionRole"
 }
 
@@ -72,7 +89,7 @@ resource "aws_lambda_function" "default" {
   filename      = local.filename
   handler       = var.handler
   runtime       = var.runtime
-  role          = module.lambda_role.arn
+  role          = var.role_arn != null ? var.role_arn : aws_iam_role.default[0].arn
   publish       = var.publish
   tags          = var.tags
   timeout       = var.timeout

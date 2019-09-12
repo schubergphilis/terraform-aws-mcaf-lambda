@@ -63,6 +63,12 @@ variable "timeout" {
   description = "The timeout of the lambda"
 }
 
+variable "memory_size" {
+  type        = number
+  default     = null
+  description = "The memory size of the lambda"
+}
+
 variable "subnet_ids" {
   type        = list(string)
   default     = null

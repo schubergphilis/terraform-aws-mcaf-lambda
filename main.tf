@@ -93,6 +93,7 @@ resource "aws_lambda_function" "default" {
   publish       = var.publish
   tags          = var.tags
   timeout       = var.timeout
+  memory_size   = var.memory_size
 
   dynamic vpc_config {
     for_each = local.vpc_config

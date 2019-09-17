@@ -88,12 +88,13 @@ resource "aws_lambda_function" "default" {
   description   = var.description
   filename      = local.filename
   handler       = var.handler
+  kms_key_arn   = var.kms_key_arn
+  memory_size   = var.memory_size
   runtime       = var.runtime
   role          = var.role_arn != null ? var.role_arn : aws_iam_role.default[0].arn
   publish       = var.publish
-  tags          = var.tags
   timeout       = var.timeout
-  memory_size   = var.memory_size
+  tags          = var.tags
 
   dynamic vpc_config {
     for_each = local.vpc_config

@@ -9,6 +9,18 @@ variable "description" {
   description = "A description of the lambda"
 }
 
+variable "cloudwatch_logs" {
+  type        = bool
+  default     = true
+  description = "Whether or not to configure a CloudWatch log group"
+}
+
+variable "environment" {
+  type        = map(string)
+  default     = null
+  description = "A map of environment variables to assign to the lambda"
+}
+
 variable "filename" {
   type        = string
   default     = null
@@ -19,6 +31,18 @@ variable "handler" {
   type        = string
   default     = "main.handler"
   description = "The function entrypoint in your code"
+}
+
+variable "kms_key_arn" {
+  type        = string
+  default     = null
+  description = "The ARN for the KMS key used to encrypt the environment variables"
+}
+
+variable "memory_size" {
+  type        = number
+  default     = null
+  description = "The memory size of the lambda"
 }
 
 variable "runtime" {
@@ -45,34 +69,16 @@ variable "publish" {
   description = "Whether to publish creation/change as new lambda function version"
 }
 
-variable "cloudwatch_logs" {
-  type        = bool
-  default     = true
-  description = "Whether or not to configure a CloudWatch log group"
-}
-
-variable "environment" {
-  type        = map(string)
+variable "subnet_ids" {
+  type        = list(string)
   default     = null
-  description = "A map of environment variables to assign to the lambda"
+  description = "The subnet ids where this lambda needs to run"
 }
 
 variable "timeout" {
   type        = number
   default     = 5
   description = "The timeout of the lambda"
-}
-
-variable "memory_size" {
-  type        = number
-  default     = null
-  description = "The memory size of the lambda"
-}
-
-variable "subnet_ids" {
-  type        = list(string)
-  default     = null
-  description = "The subnet ids where this lambda needs to run"
 }
 
 variable "tags" {

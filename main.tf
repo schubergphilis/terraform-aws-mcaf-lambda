@@ -1,8 +1,9 @@
 locals {
-  environment    = var.environment != null ? { create : true } : {}
-  execution_type = var.subnet_ids == null ? "Basic" : "VPCAccess"
-  filename       = var.filename != null ? var.filename : data.archive_file.dummy.output_path
-  vpc_config     = var.subnet_ids != null ? { create : true } : {}
+  environment      = var.environment != null ? { create : true } : {}
+  execution_type   = var.subnet_ids == null ? "Basic" : "VPCAccess"
+  filename         = var.filename != null ? var.filename : data.archive_file.dummy.output_path
+  source_code_hash = var.filename != null ? filebase64sha256(var.filename) : null
+  vpc_config       = var.subnet_ids != null ? { create : true } : {}
 }
 
 provider "aws" {
@@ -83,18 +84,19 @@ data "archive_file" "dummy" {
 }
 
 resource "aws_lambda_function" "default" {
-  provider      = aws.lambda
-  function_name = var.name
-  description   = var.description
-  filename      = local.filename
-  handler       = var.handler
-  kms_key_arn   = var.kms_key_arn
-  memory_size   = var.memory_size
-  runtime       = var.runtime
-  role          = var.role_arn != null ? var.role_arn : aws_iam_role.default[0].arn
-  publish       = var.publish
-  timeout       = var.timeout
-  tags          = var.tags
+  provider         = aws.lambda
+  function_name    = var.name
+  description      = var.description
+  filename         = local.filename
+  handler          = var.handler
+  kms_key_arn      = var.kms_key_arn
+  memory_size      = var.memory_size
+  runtime          = var.runtime
+  role             = var.role_arn != null ? var.role_arn : aws_iam_role.default[0].arn
+  publish          = var.publish
+  source_code_hash = local.source_code_hash
+  timeout          = var.timeout
+  tags             = var.tags
 
   dynamic vpc_config {
     for_each = local.vpc_config

@@ -42,7 +42,7 @@ variable "kms_key_arn" {
 variable "layers" {
   type        = list(string)
   default     = []
-  description = "List of Lambda Layer Arns to be used by the Lambda function"
+  description = "List of Lambda layer ARNs to be used by the Lambda function"
 }
 
 variable "memory_size" {

@@ -39,6 +39,12 @@ variable "kms_key_arn" {
   description = "The ARN for the KMS key used to encrypt the environment variables"
 }
 
+variable "layers" {
+  type        = list(string)
+  default     = []
+  description = "List of Lambda layer ARNs to be used by the Lambda function"
+}
+
 variable "memory_size" {
   type        = number
   default     = null

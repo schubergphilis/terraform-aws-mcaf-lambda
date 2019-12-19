@@ -90,6 +90,7 @@ resource "aws_lambda_function" "default" {
   filename         = local.filename
   handler          = var.handler
   kms_key_arn      = var.kms_key_arn
+  layers           = var.layers
   memory_size      = var.memory_size
   runtime          = var.runtime
   role             = var.role_arn != null ? var.role_arn : aws_iam_role.default[0].arn

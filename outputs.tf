@@ -1,11 +1,11 @@
 output "arn" {
   value       = aws_lambda_function.default.arn
-  description = "ARN of the lambda"
+  description = "ARN of the Lambda"
 }
 
 output "qualified_arn" {
   value       = aws_lambda_function.default.qualified_arn
-  description = "Qualified ARN of the lambda"
+  description = "Qualified ARN of the Lambda"
 }
 
 output "security_group_id" {
@@ -15,5 +15,5 @@ output "security_group_id" {
 
 output "name" {
   value       = aws_lambda_function.default.function_name
-  description = "Function name of Lambda"
+  description = "Function name of the Lambda"
 }

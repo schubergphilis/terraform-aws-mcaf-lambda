@@ -45,6 +45,12 @@ variable "layers" {
   description = "List of Lambda layer ARNs to be used by the Lambda function"
 }
 
+variable "log_retention" {
+  type        = number
+  default     = 14
+  description = "Number of days to retain log events in the specified log group"
+}
+
 variable "memory_size" {
   type        = number
   default     = null

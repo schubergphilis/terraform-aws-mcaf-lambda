@@ -40,7 +40,7 @@ resource "aws_cloudwatch_log_group" "default" {
   provider          = aws.lambda
   count             = var.cloudwatch_logs ? 1 : 0
   name              = "/aws/lambda/${var.name}"
-  retention_in_days = 14
+  retention_in_days = var.cloudwatch_logs_retention
 }
 
 resource "aws_iam_role_policy_attachment" "default" {

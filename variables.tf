@@ -15,12 +15,6 @@ variable "cloudwatch_logs" {
   description = "Whether or not to configure a CloudWatch log group"
 }
 
-variable "cloudwatch_logs_retention" {
-  type        = number
-  default     = 14
-  description = "Number of days you want to retain log events in the specified log group"
-}
-
 variable "environment" {
   type        = map(string)
   default     = null
@@ -49,6 +43,12 @@ variable "layers" {
   type        = list(string)
   default     = []
   description = "List of Lambda layer ARNs to be used by the Lambda function"
+}
+
+variable "log_retention" {
+  type        = number
+  default     = 14
+  description = "Number of days to retain log events in the specified log group"
 }
 
 variable "memory_size" {

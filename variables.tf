@@ -63,6 +63,12 @@ variable "runtime" {
   description = "The function runtime to use"
 }
 
+variable "reserved_concurrency" {
+  type        = number
+  default     = null
+  description = "An optional reserved concurrent executions"
+}
+
 variable "role_arn" {
   type        = string
   default     = null

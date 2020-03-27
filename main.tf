@@ -84,20 +84,21 @@ data "archive_file" "dummy" {
 }
 
 resource "aws_lambda_function" "default" {
-  provider         = aws.lambda
-  function_name    = var.name
-  description      = var.description
-  filename         = local.filename
-  handler          = var.handler
-  kms_key_arn      = var.kms_key_arn
-  layers           = var.layers
-  memory_size      = var.memory_size
-  runtime          = var.runtime
-  role             = var.role_arn != null ? var.role_arn : aws_iam_role.default[0].arn
-  publish          = var.publish
-  source_code_hash = local.source_code_hash
-  timeout          = var.timeout
-  tags             = var.tags
+  provider                       = aws.lambda
+  function_name                  = var.name
+  description                    = var.description
+  filename                       = local.filename
+  handler                        = var.handler
+  kms_key_arn                    = var.kms_key_arn
+  layers                         = var.layers
+  memory_size                    = var.memory_size
+  runtime                        = var.runtime
+  reserved_concurrent_executions = var.reserved_concurrency
+  role                           = var.role_arn != null ? var.role_arn : aws_iam_role.default[0].arn
+  publish                        = var.publish
+  source_code_hash               = local.source_code_hash
+  timeout                        = var.timeout
+  tags                           = var.tags
 
   dynamic vpc_config {
     for_each = local.vpc_config

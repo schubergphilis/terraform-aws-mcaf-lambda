@@ -66,7 +66,7 @@ variable "runtime" {
 variable "reserved_concurrency" {
   type        = number
   default     = null
-  description = "An optional reserved concurrent executions"
+  description = "The amount of reserved concurrent executions for this lambda function"
 }
 
 variable "role_arn" {

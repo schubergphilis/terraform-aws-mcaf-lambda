@@ -20,5 +20,5 @@ output "security_group_id" {
 
 output "version" {
   value       = aws_lambda_function.default.version
-  description = "Latest published version of the Lambda Function"
+  description = "Latest published version of the Lambda function"
 }

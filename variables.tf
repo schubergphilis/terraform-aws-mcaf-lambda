@@ -27,6 +27,12 @@ variable "filename" {
   description = "The path to the function's deployment package within the local filesystem"
 }
 
+variable "force_create_policy" {
+  type        = bool
+  default     = null
+  description = "Overrule whether the role policy has to be created."
+}
+
 variable "handler" {
   type        = string
   default     = "main.handler"

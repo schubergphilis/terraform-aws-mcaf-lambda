@@ -15,6 +15,12 @@ variable "cloudwatch_logs" {
   description = "Whether or not to configure a CloudWatch log group"
 }
 
+variable "create_policy" {
+  type        = bool
+  default     = null
+  description = "Overrule whether the Lambda role policy has to be created"
+}
+
 variable "environment" {
   type        = map(string)
   default     = null

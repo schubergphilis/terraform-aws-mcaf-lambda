@@ -29,8 +29,8 @@ variable "filename" {
 
 variable "force_create_policy" {
   type        = bool
-  default     = false
-  description = "Force creation of the Lambda role policy"
+  default     = null
+  description = "Overrule whether the role policy has to be created."
 }
 
 variable "handler" {

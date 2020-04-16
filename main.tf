@@ -1,5 +1,5 @@
 locals {
-  create_policy    = var.force_create_policy ? true : var.role_arn == null
+  create_policy    = var.force_create_policy != null ? (var.force_create_policy ? 1 : 0) : (var.role_arn == null ? 1 : 0)
   environment      = var.environment != null ? { create : true } : {}
   execution_type   = var.subnet_ids == null ? "Basic" : "VPCAccess"
   filename         = var.filename != null ? var.filename : data.archive_file.dummy.output_path
@@ -24,14 +24,14 @@ data "aws_iam_policy_document" "default" {
 }
 
 resource "aws_iam_role" "default" {
-  count              = local.create_policy ? 1 : 0
+  count              = local.create_policy
   name               = "LambdaRole-${var.name}"
   assume_role_policy = data.aws_iam_policy_document.default.json
   tags               = var.tags
 }
 
 resource "aws_iam_role_policy" "default" {
-  count  = local.create_policy ? 1 : 0
+  count  = local.create_policy
   name   = "LambdaRole-${var.name}"
   role   = aws_iam_role.default[0].id
   policy = var.policy
@@ -46,7 +46,7 @@ resource "aws_cloudwatch_log_group" "default" {
 
 resource "aws_iam_role_policy_attachment" "default" {
   provider   = aws.lambda
-  count      = local.create_policy && var.cloudwatch_logs ? 1 : 0
+  count      = local.create_policy == 1 && var.cloudwatch_logs ? 1 : 0
   role       = aws_iam_role.default[0].id
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambda${local.execution_type}ExecutionRole"
 }

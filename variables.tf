@@ -109,3 +109,9 @@ variable "tags" {
   type        = map(string)
   description = "A mapping of tags to assign to the bucket"
 }
+
+variable "retries" {
+  type        = number
+  default     = null
+  description = "Number of maximum retries for the lambda"
+}

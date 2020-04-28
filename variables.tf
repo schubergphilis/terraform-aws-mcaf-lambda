@@ -93,6 +93,12 @@ variable "publish" {
   description = "Whether to publish creation/change as new lambda function version"
 }
 
+variable "retries" {
+  type        = number
+  default     = null
+  description = "Maximum number of retries for the Lambda invocation"
+}
+
 variable "subnet_ids" {
   type        = list(string)
   default     = null
@@ -108,10 +114,4 @@ variable "timeout" {
 variable "tags" {
   type        = map(string)
   description = "A mapping of tags to assign to the bucket"
-}
-
-variable "retries" {
-  type        = number
-  default     = null
-  description = "Number of maximum retries for the lambda"
 }

@@ -93,6 +93,12 @@ variable "publish" {
   description = "Whether to publish creation/change as new lambda function version"
 }
 
+variable "retries" {
+  type        = number
+  default     = null
+  description = "Maximum number of retries for the Lambda invocation"
+}
+
 variable "subnet_ids" {
   type        = list(string)
   default     = null

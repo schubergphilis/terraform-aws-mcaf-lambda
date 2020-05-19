@@ -111,6 +111,12 @@ variable "timeout" {
   description = "The timeout of the lambda"
 }
 
+variable "tracing_config_mode" {
+  type        = string
+  default     = null
+  description = "The function's AWS X-Ray tracing configuration"
+}
+
 variable "tags" {
   type        = map(string)
   description = "A mapping of tags to assign to the bucket"

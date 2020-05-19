@@ -5,6 +5,7 @@ locals {
   filename         = var.filename != null ? var.filename : data.archive_file.dummy.output_path
   source_code_hash = var.filename != null ? filebase64sha256(var.filename) : null
   vpc_config       = var.subnet_ids != null ? { create : true } : {}
+  tracing_config   = var.tracing_config_mode != null ? { create : true } : {}
 }
 
 provider "aws" {
@@ -120,6 +121,13 @@ resource "aws_lambda_function" "default" {
 
     content {
       variables = var.environment
+    }
+  }
+
+  dynamic tracing_config {
+    for_each = local.tracing_config
+    content {
+      mode = var.tracing_config_mode
     }
   }
 }

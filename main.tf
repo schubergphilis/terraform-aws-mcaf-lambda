@@ -4,6 +4,7 @@ locals {
   execution_type   = var.subnet_ids == null ? "Basic" : "VPCAccess"
   filename         = var.filename != null ? var.filename : data.archive_file.dummy.output_path
   source_code_hash = var.filename != null ? filebase64sha256(var.filename) : null
+  tracing_config   = var.tracing_config_mode != null ? { create : true } : {}
   vpc_config       = var.subnet_ids != null ? { create : true } : {}
 }
 
@@ -16,6 +17,7 @@ data "aws_iam_policy_document" "default" {
     actions = [
       "sts:AssumeRole"
     ]
+
     principals {
       type        = "Service"
       identifiers = ["lambda.amazonaws.com", "edgelambda.amazonaws.com"]
@@ -107,19 +109,28 @@ resource "aws_lambda_function" "default" {
   timeout                        = var.timeout
   tags                           = var.tags
 
-  dynamic vpc_config {
-    for_each = local.vpc_config
-    content {
-      subnet_ids         = var.subnet_ids
-      security_group_ids = [aws_security_group.default[0].id]
-    }
-  }
-
   dynamic environment {
     for_each = local.environment
 
     content {
       variables = var.environment
+    }
+  }
+
+  dynamic tracing_config {
+    for_each = local.tracing_config
+
+    content {
+      mode = var.tracing_config_mode
+    }
+  }
+
+  dynamic vpc_config {
+    for_each = local.vpc_config
+
+    content {
+      subnet_ids         = var.subnet_ids
+      security_group_ids = [aws_security_group.default[0].id]
     }
   }
 }

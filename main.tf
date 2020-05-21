@@ -17,6 +17,7 @@ data "aws_iam_policy_document" "default" {
     actions = [
       "sts:AssumeRole"
     ]
+
     principals {
       type        = "Service"
       identifiers = ["lambda.amazonaws.com", "edgelambda.amazonaws.com"]
@@ -118,6 +119,7 @@ resource "aws_lambda_function" "default" {
 
   dynamic tracing_config {
     for_each = local.tracing_config
+
     content {
       mode = var.tracing_config_mode
     }

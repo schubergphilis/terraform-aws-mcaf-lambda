@@ -99,6 +99,24 @@ variable "retries" {
   description = "Maximum number of retries for the Lambda invocation"
 }
 
+variable "s3_bucket" {
+  type        = string
+  default     = null
+  description = "The S3 bucket location containing the function's deployment package"
+}
+
+variable "s3_key" {
+  type        = string
+  default     = null
+  description = "The S3 key of an object containing the function's deployment package"
+}
+
+variable "s3_object_version" {
+  type        = string
+  default     = null
+  description = "The object version containing the function's deployment package"
+}
+
 variable "subnet_ids" {
   type        = list(string)
   default     = null

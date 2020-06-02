@@ -94,18 +94,21 @@ resource "aws_lambda_function_event_invoke_config" "default" {
 
 resource "aws_lambda_function" "default" {
   provider                       = aws.lambda
-  function_name                  = var.name
   description                    = var.description
-  filename                       = local.filename
+  filename                       = var.s3_bucket == null ? local.filename : null
+  function_name                  = var.name
   handler                        = var.handler
   kms_key_arn                    = var.kms_key_arn
   layers                         = var.layers
   memory_size                    = var.memory_size
+  publish                        = var.publish
   runtime                        = var.runtime
   reserved_concurrent_executions = var.reserved_concurrency
   role                           = var.role_arn != null ? var.role_arn : aws_iam_role.default[0].arn
-  publish                        = var.publish
-  source_code_hash               = local.source_code_hash
+  s3_bucket                      = var.s3_bucket
+  s3_key                         = var.s3_key
+  s3_object_version              = var.s3_object_version
+  source_code_hash               = var.s3_bucket == null ? local.source_code_hash : null
   timeout                        = var.timeout
   tags                           = var.tags
 

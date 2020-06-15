@@ -86,6 +86,19 @@ data "archive_file" "dummy" {
   }
 }
 
+data "aws_s3_bucket_objects" "s3_objects" {
+  count  = var.s3_bucket != null && var.s3_key != null ? 1 : 0
+  bucket = var.s3_bucket
+  prefix = var.s3_key
+}
+
+resource "aws_s3_bucket_object" "s3_dummy" {
+  count  = contains(concat(data.aws_s3_bucket_objects.s3_objects.*.keys, list()), var.s3_key) ? 0 : 1
+  bucket = var.s3_bucket
+  key    = var.s3_key
+  source = data.archive_file.dummy.output_path
+}
+
 resource "aws_lambda_function_event_invoke_config" "default" {
   count                  = var.retries != null ? 1 : 0
   function_name          = aws_lambda_function.default.function_name

@@ -5,7 +5,6 @@ locals {
   filename         = var.filename != null ? var.filename : data.archive_file.dummy.output_path
   source_code_hash = var.filename != null ? filebase64sha256(var.filename) : null
   tracing_config   = var.tracing_config_mode != null ? { create : true } : {}
-  use_s3_object    = var.s3_bucket != null && var.s3_key != null
   vpc_config       = var.subnet_ids != null ? { create : true } : {}
 }
 
@@ -88,13 +87,13 @@ data "archive_file" "dummy" {
 }
 
 data "aws_s3_bucket_objects" "s3_objects" {
-  count  = local.use_s3_object ? 1 : 0
+  count  = var.s3_bucket != null && var.s3_key != null ? 1 : 0
   bucket = var.s3_bucket
   prefix = var.s3_key
 }
 
 resource "aws_s3_bucket_object" "s3_dummy" {
-  count  = local.use_s3_object ? contains(data.aws_s3_bucket_objects.s3_objects[0].keys, var.s3_key) ? 0 : 1 : 0
+  count  = contains(concat(data.aws_s3_bucket_objects.s3_objects.*.keys, list()), var.s3_key) ? 0 : 1
   bucket = var.s3_bucket
   key    = var.s3_key
   source = data.archive_file.dummy.output_path
@@ -109,7 +108,7 @@ resource "aws_lambda_function_event_invoke_config" "default" {
 resource "aws_lambda_function" "default" {
   provider                       = aws.lambda
   description                    = var.description
-  filename                       = var.s3_bucket == null ? local.filename : null
+  filename                       = local.filename
   function_name                  = var.name
   handler                        = var.handler
   kms_key_arn                    = var.kms_key_arn

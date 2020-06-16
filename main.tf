@@ -93,7 +93,7 @@ data "aws_s3_bucket_objects" "s3_objects" {
 }
 
 resource "aws_s3_bucket_object" "s3_dummy" {
-  count  = contains(concat(data.aws_s3_bucket_objects.s3_objects.*.keys, list()), var.s3_key) ? 0 : 1
+  count  = contains(concat(data.aws_s3_bucket_objects.s3_objects.*.keys, list("")), var.s3_key) ? 0 : 1
   bucket = var.s3_bucket
   key    = var.s3_key
   source = data.archive_file.dummy.output_path

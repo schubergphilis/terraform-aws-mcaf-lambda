@@ -3,6 +3,7 @@ locals {
   environment      = var.environment != null ? { create : true } : {}
   execution_type   = var.subnet_ids == null ? "Basic" : "VPCAccess"
   filename         = var.filename != null ? var.filename : data.archive_file.dummy.output_path
+  use_s3_object    = var.s3_bucket != null && var.s3_key != null
   source_code_hash = var.filename != null ? filebase64sha256(var.filename) : null
   tracing_config   = var.tracing_config_mode != null ? { create : true } : {}
   vpc_config       = var.subnet_ids != null ? { create : true } : {}
@@ -87,13 +88,13 @@ data "archive_file" "dummy" {
 }
 
 data "aws_s3_bucket_objects" "s3_objects" {
-  count  = var.s3_bucket != null && var.s3_key != null ? 1 : 0
+  count  = local.use_s3_object ? 1 : 0
   bucket = var.s3_bucket
   prefix = var.s3_key
 }
 
 resource "aws_s3_bucket_object" "s3_dummy" {
-  count  = contains(concat(data.aws_s3_bucket_objects.s3_objects.*.keys, list("")), var.s3_key) ? 0 : 1
+  count  = local.use_s3_object ? contains(concat(data.aws_s3_bucket_objects.s3_objects.*.keys, list("")), var.s3_key) ? 0 : 1 : 0
   bucket = var.s3_bucket
   key    = var.s3_key
   source = data.archive_file.dummy.output_path

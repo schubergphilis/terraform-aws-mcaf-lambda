@@ -94,10 +94,16 @@ data "aws_s3_bucket_objects" "s3_objects" {
 }
 
 resource "aws_s3_bucket_object" "s3_dummy" {
-  count  = local.use_s3_object ? contains(concat(data.aws_s3_bucket_objects.s3_objects.*.keys, list("")), var.s3_key) ? 0 : 1 : 0
+  count  = local.use_s3_object ? 1 : 0
   bucket = var.s3_bucket
   key    = var.s3_key
   source = data.archive_file.dummy.output_path
+
+  lifecycle {
+    ignore_changes = [
+      source
+    ]
+  }
 }
 
 resource "aws_lambda_function_event_invoke_config" "default" {

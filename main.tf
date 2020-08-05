@@ -87,12 +87,6 @@ data "archive_file" "dummy" {
   }
 }
 
-data "aws_s3_bucket_objects" "s3_objects" {
-  count  = local.use_s3_object ? 1 : 0
-  bucket = var.s3_bucket
-  prefix = var.s3_key
-}
-
 resource "aws_s3_bucket_object" "s3_dummy" {
   count  = local.use_s3_object ? 1 : 0
   bucket = var.s3_bucket

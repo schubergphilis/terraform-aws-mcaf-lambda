@@ -8,10 +8,6 @@ locals {
   vpc_config       = var.subnet_ids != null ? { create : true } : {}
 }
 
-provider "aws" {
-  alias = "lambda"
-}
-
 data "aws_iam_policy_document" "default" {
   statement {
     actions = [
@@ -40,27 +36,23 @@ resource "aws_iam_role_policy" "default" {
 }
 
 resource "aws_cloudwatch_log_group" "default" {
-  provider          = aws.lambda
   count             = var.cloudwatch_logs ? 1 : 0
   name              = "/aws/lambda/${var.name}"
   retention_in_days = var.log_retention
 }
 
 resource "aws_iam_role_policy_attachment" "default" {
-  provider   = aws.lambda
   count      = local.create_policy && var.cloudwatch_logs ? 1 : 0
   role       = aws_iam_role.default[0].id
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambda${local.execution_type}ExecutionRole"
 }
 
 data "aws_subnet" "selected" {
-  provider = aws.lambda
-  count    = var.subnet_ids != null ? 1 : 0
-  id       = var.subnet_ids[0]
+  count = var.subnet_ids != null ? 1 : 0
+  id    = var.subnet_ids[0]
 }
 
 resource "aws_security_group" "default" {
-  provider    = aws.lambda
   count       = var.subnet_ids != null ? 1 : 0
   name        = var.name
   description = "Security group for lambda ${var.name}"
@@ -106,7 +98,6 @@ resource "aws_lambda_function_event_invoke_config" "default" {
 }
 
 resource "aws_lambda_function" "default" {
-  provider                       = aws.lambda
   description                    = var.description
   filename                       = var.s3_bucket == null ? local.filename : null
   function_name                  = var.name

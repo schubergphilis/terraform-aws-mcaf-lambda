@@ -3,6 +3,11 @@ output "arn" {
   description = "ARN of the Lambda"
 }
 
+output "log_group_name" {
+  value       = var.cloudwatch_logs ? aws_cloudwatch_log_group.default[0].name : ""
+  description = "The Cloud Watch log group name"
+}
+
 output "name" {
   value       = aws_lambda_function.default.function_name
   description = "Function name of the Lambda"

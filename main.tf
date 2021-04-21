@@ -8,10 +8,6 @@ locals {
   vpc_config       = var.subnet_ids != null ? { create : true } : {}
 }
 
-provider "aws" {
-  alias = "lambda"
-}
-
 data "aws_iam_policy_document" "default" {
   statement {
     actions = [
@@ -125,7 +121,7 @@ resource "aws_lambda_function" "default" {
   timeout                        = var.timeout
   tags                           = var.tags
 
-  dynamic environment {
+  dynamic "environment" {
     for_each = local.environment
 
     content {
@@ -133,7 +129,7 @@ resource "aws_lambda_function" "default" {
     }
   }
 
-  dynamic tracing_config {
+  dynamic "tracing_config" {
     for_each = local.tracing_config
 
     content {
@@ -141,7 +137,7 @@ resource "aws_lambda_function" "default" {
     }
   }
 
-  dynamic vpc_config {
+  dynamic "vpc_config" {
     for_each = local.vpc_config
 
     content {

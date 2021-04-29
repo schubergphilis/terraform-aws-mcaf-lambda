@@ -104,10 +104,10 @@ resource "aws_lambda_function_event_invoke_config" "default" {
 resource "aws_lambda_function" "default" {
   provider                       = aws.lambda
   description                    = var.description
+  event_source_arn               = var.event_source_arn
   filename                       = var.s3_bucket == null ? local.filename : null
   function_name                  = var.name
   handler                        = var.handler
-  event_source_arn               = var.event_source_arn
   kms_key_arn                    = var.kms_key_arn
   layers                         = var.layers
   memory_size                    = var.memory_size

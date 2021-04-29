@@ -27,6 +27,12 @@ variable "environment" {
   description = "A map of environment variables to assign to the lambda"
 }
 
+variable "event_source_arn" {
+  type        = string
+  default     = null
+  description = "An optional trigger source arn i.e sqs/api gateway arn"
+}
+
 variable "filename" {
   type        = string
   default     = null
@@ -138,10 +144,4 @@ variable "tracing_config_mode" {
 variable "tags" {
   type        = map(string)
   description = "A mapping of tags to assign to the bucket"
-}
-
-variable "event_source_arn" {
-  type        = string
-  default     = null
-  description = "An optional trigger source arn i.e sqs/api gateway arn"
 }

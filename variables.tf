@@ -139,3 +139,9 @@ variable "tags" {
   type        = map(string)
   description = "A mapping of tags to assign to the bucket"
 }
+
+variable "event_source_arn" {
+  type        = string
+  default     = null
+  description = "An optional trigger source arn i.e sqs/api gateway arn"
+}

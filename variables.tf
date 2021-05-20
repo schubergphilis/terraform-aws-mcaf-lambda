@@ -27,12 +27,6 @@ variable "environment" {
   description = "A map of environment variables to assign to the lambda"
 }
 
-variable "event_source_arn" {
-  type        = string
-  default     = null
-  description = "An optional trigger source arn i.e sqs/api gateway arn"
-}
-
 variable "filename" {
   type        = string
   default     = null

@@ -81,6 +81,12 @@ variable "role_arn" {
   description = "An optional lambda execution role"
 }
 
+variable "permissions_boundary" {
+  type        = string
+  default     = null
+  description = "The permissions boundary to set on the role"
+}
+
 variable "policy" {
   type        = string
   default     = null

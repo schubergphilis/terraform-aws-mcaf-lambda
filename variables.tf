@@ -145,3 +145,9 @@ variable "tags" {
   type        = map(string)
   description = "A mapping of tags to assign to the bucket"
 }
+
+variable "s3_dummy" {
+  type        = bool
+  default     = false
+  description = "Whether to use a dummy file when using a S3 object"
+}

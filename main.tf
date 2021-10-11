@@ -83,19 +83,6 @@ data "archive_file" "dummy" {
   }
 }
 
-resource "aws_s3_bucket_object" "s3_dummy" {
-  count  = var.s3_bucket != null && var.s3_key != null ? 1 : 0
-  bucket = var.s3_bucket
-  key    = var.s3_key
-  source = data.archive_file.dummy.output_path
-
-  lifecycle {
-    ignore_changes = [
-      source
-    ]
-  }
-}
-
 resource "aws_lambda_function_event_invoke_config" "default" {
   count                  = var.retries != null ? 1 : 0
   function_name          = aws_lambda_function.default.function_name

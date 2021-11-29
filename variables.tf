@@ -145,3 +145,9 @@ variable "tags" {
   type        = map(string)
   description = "A mapping of tags to assign to the bucket"
 }
+
+variable "dead_letter_target_arn" {
+  description = "The ARN of an SNS topic or SQS queue to notify when an invocation fails, it's required to add a policy."
+  type        = string
+  default     = null
+}

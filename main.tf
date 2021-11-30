@@ -4,7 +4,7 @@ locals {
   environment        = var.environment != null ? { create : true } : {}
   execution_type     = var.subnet_ids == null ? "Basic" : "VPCAccess"
   filename           = var.filename != null ? var.filename : data.archive_file.dummy.output_path
-  source_code_hash   = var.filename != null ? filebase64sha256(var.filename) : null
+  source_code_hash   = var.source_code_hash != null ? var.source_code_hash : var.filename != null ? filebase64sha256(var.filename) : null
   tracing_config     = var.tracing_config_mode != null ? { create : true } : {}
   vpc_config         = var.subnet_ids != null ? { create : true } : {}
 }

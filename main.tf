@@ -125,6 +125,7 @@ resource "aws_lambda_function" "default" {
 
   dynamic "dead_letter_config" {
     for_each = local.dead_letter_config
+
     content {
       target_arn = var.dead_letter_target_arn
     }
@@ -154,6 +155,5 @@ resource "aws_lambda_function" "default" {
       security_group_ids = [aws_security_group.default[0].id]
     }
   }
-
 
 }

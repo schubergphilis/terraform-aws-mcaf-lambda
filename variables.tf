@@ -129,6 +129,12 @@ variable "s3_object_version" {
   description = "The object version containing the function's deployment package"
 }
 
+variable "source_code_hash" {
+  type        = string
+  default     = null
+  description = "Optional source code hash"
+}
+
 variable "subnet_ids" {
   type        = list(string)
   default     = null

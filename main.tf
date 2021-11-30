@@ -155,5 +155,4 @@ resource "aws_lambda_function" "default" {
       security_group_ids = [aws_security_group.default[0].id]
     }
   }
-
 }

@@ -40,6 +40,7 @@ resource "aws_cloudwatch_log_group" "default" {
   provider          = aws.lambda
   count             = var.cloudwatch_logs ? 1 : 0
   name              = "/aws/lambda/${var.name}"
+  kms_key_id        = var.kms_key_arn
   retention_in_days = var.log_retention
 }
 

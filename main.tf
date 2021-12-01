@@ -40,6 +40,7 @@ resource "aws_cloudwatch_log_group" "default" {
   provider          = aws.lambda
   count             = var.cloudwatch_logs ? 1 : 0
   name              = "/aws/lambda/${var.name}"
+  kms_key_id        = var.kms_key_arn
   retention_in_days = var.log_retention
 }
 
@@ -69,7 +70,7 @@ resource "aws_security_group" "default" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["0.0.0.0/0"] #tfsec:ignore:aws-vpc-no-public-egress-sg
   }
 }
 

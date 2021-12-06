@@ -1,11 +1,12 @@
 locals {
-  create_policy    = var.create_policy != null ? var.create_policy : var.role_arn == null
-  environment      = var.environment != null ? { create : true } : {}
-  execution_type   = var.subnet_ids == null ? "Basic" : "VPCAccess"
-  filename         = var.filename != null ? var.filename : data.archive_file.dummy.output_path
-  source_code_hash = var.source_code_hash != null ? var.source_code_hash : var.filename != null ? filebase64sha256(var.filename) : null
-  tracing_config   = var.tracing_config_mode != null ? { create : true } : {}
-  vpc_config       = var.subnet_ids != null ? { create : true } : {}
+  create_policy      = var.create_policy != null ? var.create_policy : var.role_arn == null
+  dead_letter_config = var.dead_letter_target_arn != null ? { create : true } : {}
+  environment        = var.environment != null ? { create : true } : {}
+  execution_type     = var.subnet_ids == null ? "Basic" : "VPCAccess"
+  filename           = var.filename != null ? var.filename : data.archive_file.dummy.output_path
+  source_code_hash   = var.source_code_hash != null ? var.source_code_hash : var.filename != null ? filebase64sha256(var.filename) : null
+  tracing_config     = var.tracing_config_mode != null ? { create : true } : {}
+  vpc_config         = var.subnet_ids != null ? { create : true } : {}
 }
 
 data "aws_iam_policy_document" "default" {
@@ -122,6 +123,14 @@ resource "aws_lambda_function" "default" {
   source_code_hash               = var.s3_bucket == null ? local.source_code_hash : null
   timeout                        = var.timeout
   tags                           = var.tags
+
+  dynamic "dead_letter_config" {
+    for_each = local.dead_letter_config
+
+    content {
+      target_arn = var.dead_letter_target_arn
+    }
+  }
 
   dynamic "environment" {
     for_each = local.environment

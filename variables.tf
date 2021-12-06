@@ -21,6 +21,12 @@ variable "create_policy" {
   description = "Overrule whether the Lambda role policy has to be created"
 }
 
+variable "dead_letter_target_arn" {
+  type        = string
+  default     = null
+  description = "The ARN of an SNS topic or SQS queue to notify when an invocation fails"
+}
+
 variable "environment" {
   type        = map(string)
   default     = null

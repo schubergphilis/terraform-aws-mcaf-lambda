@@ -85,11 +85,12 @@ data "archive_file" "dummy" {
   }
 }
 
-resource "aws_s3_bucket_object" "s3_dummy" {
+resource "aws_s3_object" "s3_dummy" {
   count  = var.s3_bucket != null && var.s3_key != null ? 1 : 0
   bucket = var.s3_bucket
   key    = var.s3_key
   source = data.archive_file.dummy.output_path
+  tags   = merge(var.tags, { "Lambda" = var.name })
 
   lifecycle {
     ignore_changes = [

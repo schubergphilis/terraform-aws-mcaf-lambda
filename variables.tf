@@ -71,7 +71,7 @@ variable "memory_size" {
 
 variable "runtime" {
   type        = string
-  default     = "python3.7"
+  default     = "python3.9"
   description = "The function runtime to use"
 }
 

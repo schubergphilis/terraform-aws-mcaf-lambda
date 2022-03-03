@@ -105,6 +105,7 @@ resource "aws_lambda_function_event_invoke_config" "default" {
   maximum_retry_attempts = var.retries
 }
 
+// tfsec:ignore:aws-lambda-enable-tracing
 resource "aws_lambda_function" "default" {
   provider                       = aws.lambda
   description                    = var.description

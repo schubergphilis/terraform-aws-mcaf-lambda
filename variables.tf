@@ -27,6 +27,12 @@ variable "dead_letter_target_arn" {
   description = "The ARN of an SNS topic or SQS queue to notify when an invocation fails"
 }
 
+variable "enable_all_egress_rule" {
+  type        = bool
+  default     = false
+  description = "A flag to enable/disable adding the all ports egress rule to the service security group"
+}
+
 variable "environment" {
   type        = map(string)
   default     = null

@@ -65,14 +65,17 @@ resource "aws_security_group" "default" {
   description = "Security group for lambda ${var.name}"
   vpc_id      = data.aws_subnet.selected[0].vpc_id
   tags        = var.tags
+}
 
-  egress {
-    description = "All outbound traffic"
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"] #tfsec:ignore:aws-vpc-no-public-egress-sg
-  }
+resource "aws_security_group_rule" "allow_all_egress" {
+  count             = var.enable_all_egress_rule ? 1 : 0
+  description       = "Allow all outbound traffic to any IPv4 address"
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:aws-vpc-no-public-egress-sg
+  security_group_id = aws_security_group.default.id
 }
 
 data "archive_file" "dummy" {

@@ -15,6 +15,12 @@ variable "cloudwatch_logs" {
   description = "Whether or not to configure a CloudWatch log group"
 }
 
+variable "create_allow_all_egress_rule" {
+  type        = bool
+  default     = false
+  description = "If the lamba is deployed in a VPC by adding subnet_ids, this flag controls the creation of an all ports egress rule to the security group attached to the lambda"
+}
+
 variable "create_policy" {
   type        = bool
   default     = null
@@ -25,12 +31,6 @@ variable "dead_letter_target_arn" {
   type        = string
   default     = null
   description = "The ARN of an SNS topic or SQS queue to notify when an invocation fails"
-}
-
-variable "enable_all_egress_rule" {
-  type        = bool
-  default     = false
-  description = "If the lamba is deployed in a VPC by adding subnet_ids, this flag controls the creation of an all ports egress rule to the security group attached to the lambda"
 }
 
 variable "environment" {

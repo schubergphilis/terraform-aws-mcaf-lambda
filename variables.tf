@@ -18,7 +18,7 @@ variable "cloudwatch_logs" {
 variable "create_allow_all_egress_rule" {
   type        = bool
   default     = false
-  description = "If the lamba is deployed in a VPC by adding subnet_ids, this flag controls the creation of an all ports egress rule to the security group attached to the lambda"
+  description = "Controls whether an egress rule to any ipv4 address will be created when the lambda is configured to run in a VPC"
 }
 
 variable "create_policy" {

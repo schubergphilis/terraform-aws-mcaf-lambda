@@ -68,7 +68,7 @@ resource "aws_security_group" "default" {
 }
 
 resource "aws_security_group_rule" "allow_all_egress" {
-  count             = var.enable_all_egress_rule ? 1 : 0
+  count             = var.subnet_ids != null && var.enable_all_egress_rule ? 1 : 0
   description       = "Allow all outbound traffic to any IPv4 address"
   type              = "egress"
   from_port         = 0

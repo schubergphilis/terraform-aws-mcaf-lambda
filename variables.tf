@@ -30,7 +30,7 @@ variable "dead_letter_target_arn" {
 variable "enable_all_egress_rule" {
   type        = bool
   default     = false
-  description = "A flag to enable/disable adding the all ports egress rule to the service security group"
+  description = "If the lamba is deployed in a VPC by adding subnet_ids, this flag controls the creation of an all ports egress rule to the security group attached to the lambda"
 }
 
 variable "environment" {

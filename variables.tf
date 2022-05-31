@@ -15,6 +15,12 @@ variable "cloudwatch_logs" {
   description = "Whether or not to configure a CloudWatch log group"
 }
 
+variable "create_allow_all_egress_rule" {
+  type        = bool
+  default     = false
+  description = "Controls whether an egress rule to any ipv4 address will be created when the lambda is configured to run in a VPC"
+}
+
 variable "create_policy" {
   type        = bool
   default     = null

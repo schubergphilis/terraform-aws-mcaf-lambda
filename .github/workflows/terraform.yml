@@ -40,10 +40,21 @@ jobs:
         continue-on-error: true # added this to prevent a PR from a remote fork failing the workflow
 
   tfsec:
-    name: tfsec
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
         uses: actions/checkout@master
+
       - name: Terraform security scan
-        uses: triat/terraform-security-scan@v3.0.1
+        uses: aquasecurity/tfsec-action@v1.0.2
+        with:
+          additional_args: --concise-output
+          soft_fail: false
+          version: v1.15.4
+
+      - name: Terraform pr commenter
+        uses: aquasecurity/tfsec-pr-commenter-action@v1.2.0
+        with:
+          additional_args: --concise-output
+          github_token: ${{ github.token }}
+          tfsec_version: v1.15.4

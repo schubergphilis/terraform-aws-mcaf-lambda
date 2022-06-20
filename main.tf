@@ -63,11 +63,10 @@ resource "aws_security_group" "default" {
   count       = var.subnet_ids != null ? 1 : 0
   name        = var.name
   description = "Security group for lambda ${var.name}"
+  egress      = []
+  ingress     = []
   vpc_id      = data.aws_subnet.selected[0].vpc_id
   tags        = var.tags
-
-  ingress = []
-  egress  = []
 }
 
 resource "aws_security_group_rule" "allow_all_egress" {

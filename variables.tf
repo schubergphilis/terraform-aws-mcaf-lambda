@@ -27,6 +27,12 @@ variable "create_policy" {
   description = "Overrule whether the Lambda role policy has to be created"
 }
 
+variable "create_s3_dummy_object" {
+  type        = bool
+  default     = true
+  description = "Whether or not to create a S3 dummy object"
+}
+
 variable "dead_letter_target_arn" {
   type        = string
   default     = null

@@ -3,14 +3,14 @@ output "arn" {
   description = "ARN of the Lambda"
 }
 
-output "name" {
-  value       = aws_lambda_function.default.function_name
-  description = "Function name of the Lambda"
-}
-
 output "invoke_arn" {
   value       = aws_lambda_function.default.invoke_arn
   description = "Invoke ARN of the Lambda"
+}
+
+output "name" {
+  value       = aws_lambda_function.default.function_name
+  description = "Function name of the Lambda"
 }
 
 output "qualified_arn" {

@@ -15,10 +15,28 @@ variable "cloudwatch_logs" {
   description = "Whether or not to configure a CloudWatch log group"
 }
 
+variable "create_allow_all_egress_rule" {
+  type        = bool
+  default     = false
+  description = "Controls whether an egress rule to any ipv4 address will be created when the lambda is configured to run in a VPC"
+}
+
 variable "create_policy" {
   type        = bool
   default     = null
   description = "Overrule whether the Lambda role policy has to be created"
+}
+
+variable "create_s3_dummy_object" {
+  type        = bool
+  default     = true
+  description = "Whether or not to create a S3 dummy object"
+}
+
+variable "dead_letter_target_arn" {
+  type        = string
+  default     = null
+  description = "The ARN of an SNS topic or SQS queue to notify when an invocation fails"
 }
 
 variable "environment" {
@@ -65,7 +83,7 @@ variable "memory_size" {
 
 variable "runtime" {
   type        = string
-  default     = "python3.7"
+  default     = "python3.9"
   description = "The function runtime to use"
 }
 
@@ -121,6 +139,12 @@ variable "s3_object_version" {
   type        = string
   default     = null
   description = "The object version containing the function's deployment package"
+}
+
+variable "source_code_hash" {
+  type        = string
+  default     = null
+  description = "Optional source code hash"
 }
 
 variable "subnet_ids" {

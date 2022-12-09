@@ -3,6 +3,17 @@ variable "name" {
   description = "The name of the lambda"
 }
 
+variable "architecture" {
+  type        = string
+  default     = "x86_64"
+  description = "Instruction set architecture of the Lambda function"
+
+  validation {
+    condition     = contains(["arm64", "x86_64"], var.architecture)
+    error_message = "Allowed values for hnk_region are \"arm64\" or \"x86_64\"."
+  }
+}
+
 variable "description" {
   type        = string
   default     = ""

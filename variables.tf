@@ -10,7 +10,7 @@ variable "architecture" {
 
   validation {
     condition     = contains(["arm64", "x86_64"], var.architecture)
-    error_message = "Allowed values for hnk_region are \"arm64\" or \"x86_64\"."
+    error_message = "Allowed values are \"arm64\" or \"x86_64\"."
   }
 }
 

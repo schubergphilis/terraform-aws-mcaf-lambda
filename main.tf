@@ -115,6 +115,7 @@ resource "aws_lambda_function_event_invoke_config" "default" {
 // tfsec:ignore:aws-lambda-enable-tracing
 resource "aws_lambda_function" "default" {
   provider                       = aws.lambda
+  architectures                  = [var.architecture]
   description                    = var.description
   filename                       = var.s3_bucket == null ? local.filename : null
   function_name                  = var.name

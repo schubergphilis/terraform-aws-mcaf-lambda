@@ -52,6 +52,13 @@ resource "aws_iam_role_policy_attachment" "default" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambda${local.execution_type}ExecutionRole"
 }
 
+resource "aws_iam_role_policy_attachment" "enable_xray_daemon_write" {
+  provider   = aws.lambda
+  count      = local.create_policy && var.tracing_config_mode ? 1 : 0
+  role       = aws_iam_role.default[0].id
+  policy_arn = "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"
+}
+
 data "aws_subnet" "selected" {
   provider = aws.lambda
   count    = var.subnet_ids != null ? 1 : 0

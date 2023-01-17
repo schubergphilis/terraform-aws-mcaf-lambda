@@ -54,7 +54,7 @@ resource "aws_iam_role_policy_attachment" "default" {
 
 resource "aws_iam_role_policy_attachment" "enable_xray_daemon_write" {
   provider   = aws.lambda
-  count      = var.tracing_config_mode ? 1 : 0
+  count      = local.create_policy && var.tracing_config_mode ? 1 : 0
   role       = aws_iam_role.default[0].id
   policy_arn = "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"
 }

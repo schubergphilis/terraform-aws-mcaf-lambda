@@ -43,6 +43,7 @@ resource "aws_cloudwatch_log_group" "default" {
   name              = "/aws/lambda/${var.name}"
   kms_key_id        = var.kms_key_arn
   retention_in_days = var.log_retention
+  tags              = var.tags
 }
 
 resource "aws_iam_role_policy_attachment" "default" {

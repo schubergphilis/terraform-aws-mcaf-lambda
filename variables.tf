@@ -71,7 +71,7 @@ variable "handler" {
 variable "kms_key_arn" {
   type        = string
   default     = null
-  description = "The ARN for the KMS key used to encrypt the environment variables"
+  description = "The ARN of the KMS key used to encrypt the cloudwatch log group and environment variables"
 }
 
 variable "layers" {

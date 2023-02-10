@@ -128,7 +128,7 @@ resource "aws_lambda_function" "default" {
   filename                       = var.s3_bucket == null ? local.filename : null
   function_name                  = var.name
   handler                        = var.handler
-  kms_key_arn                    = var.kms_key_arn
+  kms_key_arn                    = var.environment != null ? var.kms_key_arn : null
   layers                         = var.layers
   memory_size                    = var.memory_size
   publish                        = var.publish

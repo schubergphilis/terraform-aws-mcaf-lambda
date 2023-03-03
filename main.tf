@@ -43,6 +43,7 @@ resource "aws_cloudwatch_log_group" "default" {
   name              = "/aws/lambda/${var.name}"
   kms_key_id        = var.kms_key_arn
   retention_in_days = var.log_retention
+  tags              = var.tags
 }
 
 resource "aws_iam_role_policy_attachment" "default" {
@@ -50,6 +51,13 @@ resource "aws_iam_role_policy_attachment" "default" {
   count      = local.create_policy && var.cloudwatch_logs ? 1 : 0
   role       = aws_iam_role.default[0].id
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambda${local.execution_type}ExecutionRole"
+}
+
+resource "aws_iam_role_policy_attachment" "enable_xray_daemon_write" {
+  provider   = aws.lambda
+  count      = local.create_policy && var.tracing_config_mode != null ? 1 : 0
+  role       = aws_iam_role.default[0].id
+  policy_arn = "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"
 }
 
 data "aws_subnet" "selected" {
@@ -65,6 +73,10 @@ resource "aws_security_group" "default" {
   description = "Security group for lambda ${var.name}"
   vpc_id      = data.aws_subnet.selected[0].vpc_id
   tags        = var.tags
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_security_group_rule" "allow_all_egress" {
@@ -111,11 +123,12 @@ resource "aws_lambda_function_event_invoke_config" "default" {
 // tfsec:ignore:aws-lambda-enable-tracing
 resource "aws_lambda_function" "default" {
   provider                       = aws.lambda
+  architectures                  = [var.architecture]
   description                    = var.description
   filename                       = var.s3_bucket == null ? local.filename : null
   function_name                  = var.name
   handler                        = var.handler
-  kms_key_arn                    = var.kms_key_arn
+  kms_key_arn                    = var.environment != null ? var.kms_key_arn : null
   layers                         = var.layers
   memory_size                    = var.memory_size
   publish                        = var.publish

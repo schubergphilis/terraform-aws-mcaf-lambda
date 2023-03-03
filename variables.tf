@@ -3,6 +3,17 @@ variable "name" {
   description = "The name of the lambda"
 }
 
+variable "architecture" {
+  type        = string
+  default     = "x86_64"
+  description = "Instruction set architecture of the Lambda function"
+
+  validation {
+    condition     = contains(["arm64", "x86_64"], var.architecture)
+    error_message = "Allowed values are \"arm64\" or \"x86_64\"."
+  }
+}
+
 variable "description" {
   type        = string
   default     = ""
@@ -60,7 +71,7 @@ variable "handler" {
 variable "kms_key_arn" {
   type        = string
   default     = null
-  description = "The ARN for the KMS key used to encrypt the environment variables"
+  description = "The ARN of the KMS key used to encrypt the cloudwatch log group and environment variables"
 }
 
 variable "layers" {

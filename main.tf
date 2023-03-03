@@ -6,6 +6,7 @@ locals {
   filename           = var.filename != null ? var.filename : data.archive_file.dummy.output_path
   source_code_hash   = var.source_code_hash != null ? var.source_code_hash : var.filename != null ? filebase64sha256(var.filename) : null
   tracing_config     = var.tracing_config_mode != null ? { create : true } : {}
+  ephemeral_storage  = var.ephemeral_storage_size != null ? { create : true } : {}
   vpc_config         = var.subnet_ids != null ? { create : true } : {}
 }
 
@@ -172,6 +173,14 @@ resource "aws_lambda_function" "default" {
     content {
       subnet_ids         = var.subnet_ids
       security_group_ids = [aws_security_group.default[0].id]
+    }
+  }
+
+  dynamic "ephemeral_storage" {
+    for_each = local.ephemeral_storage
+
+    content {
+      size = var.ephemeral_storage_size
     }
   }
 }

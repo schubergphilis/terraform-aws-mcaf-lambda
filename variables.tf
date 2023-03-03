@@ -176,6 +176,12 @@ variable "tracing_config_mode" {
   description = "The lambda's AWS X-Ray tracing configuration"
 }
 
+variable "ephemeral_storage_size" {
+  type        = number
+  default     = null
+  description = "The size of the Lambda function Ephemeral storage"
+}
+
 variable "tags" {
   type        = map(string)
   description = "A mapping of tags to assign to the bucket"

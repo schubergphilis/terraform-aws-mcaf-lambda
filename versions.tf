@@ -5,7 +5,7 @@ terraform {
     aws = {
       source                = "hashicorp/aws"
       configuration_aliases = [aws.lambda]
-      version               = "> 4.0.0"
+      version               = "> 4.8.0"
     }
   }
 }

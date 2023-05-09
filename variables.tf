@@ -186,3 +186,15 @@ variable "tags" {
   type        = map(string)
   description = "A mapping of tags to assign to the bucket"
 }
+
+variable "disable_iam_tags" {
+  type        = bool
+  description = "Disable the IAM Role Tags, as blocked by a policy"
+  default     = false
+}
+
+variable "role_prefix" {
+  type        = string
+  description = "Default prefix for the role"
+  default     = null
+}

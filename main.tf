@@ -25,10 +25,10 @@ data "aws_iam_policy_document" "default" {
 
 resource "aws_iam_role" "default" {
   count                = local.create_policy ? 1 : 0
-  name                 = "LambdaRole-${var.name}"
+  name                 = join("-", compact([var.role_prefix, "LambdaRole", var.name]))
   assume_role_policy   = data.aws_iam_policy_document.default.json
   permissions_boundary = var.permissions_boundary
-  tags                 = var.tags
+  tags                 = var.disable_iam_tags ? null : var.tags
 }
 
 resource "aws_iam_role_policy" "default" {

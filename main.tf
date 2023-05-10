@@ -28,7 +28,7 @@ resource "aws_iam_role" "default" {
   name                 = join("-", compact([var.role_prefix, "LambdaRole", var.name]))
   assume_role_policy   = data.aws_iam_policy_document.default.json
   permissions_boundary = var.permissions_boundary
-  tags                 = var.disable_iam_tags ? null : var.tags
+  tags                 = var.tags
 }
 
 resource "aws_iam_role_policy" "default" {

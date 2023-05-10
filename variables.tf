@@ -186,3 +186,9 @@ variable "tags" {
   type        = map(string)
   description = "A mapping of tags to assign to the bucket"
 }
+
+variable "role_prefix" {
+  type        = string
+  description = "Default prefix for the role"
+  default     = null
+}

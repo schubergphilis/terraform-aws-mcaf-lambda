@@ -1,8 +1,3 @@
-variable "name" {
-  type        = string
-  description = "The name of the lambda"
-}
-
 variable "architecture" {
   type        = string
   default     = "x86_64"
@@ -12,12 +7,6 @@ variable "architecture" {
     condition     = contains(["arm64", "x86_64"], var.architecture)
     error_message = "Allowed values are \"arm64\" or \"x86_64\"."
   }
-}
-
-variable "description" {
-  type        = string
-  default     = ""
-  description = "A description of the lambda"
 }
 
 variable "cloudwatch_logs" {
@@ -50,10 +39,22 @@ variable "dead_letter_target_arn" {
   description = "The ARN of an SNS topic or SQS queue to notify when an invocation fails"
 }
 
+variable "description" {
+  type        = string
+  default     = ""
+  description = "A description of the lambda"
+}
+
 variable "environment" {
   type        = map(string)
   default     = null
   description = "A map of environment variables to assign to the lambda"
+}
+
+variable "ephemeral_storage_size" {
+  type        = number
+  default     = null
+  description = "The size of the Lambda function Ephemeral storage"
 }
 
 variable "filename" {
@@ -92,22 +93,9 @@ variable "memory_size" {
   description = "The memory size of the lambda"
 }
 
-variable "runtime" {
+variable "name" {
   type        = string
-  default     = "python3.9"
-  description = "The function runtime to use"
-}
-
-variable "reserved_concurrency" {
-  type        = number
-  default     = null
-  description = "The amount of reserved concurrent executions for this lambda function"
-}
-
-variable "role_arn" {
-  type        = string
-  default     = null
-  description = "An optional lambda execution role"
+  description = "The name of the lambda"
 }
 
 variable "permissions_boundary" {
@@ -128,10 +116,34 @@ variable "publish" {
   description = "Whether to publish creation/change as new lambda function version"
 }
 
+variable "reserved_concurrency" {
+  type        = number
+  default     = null
+  description = "The amount of reserved concurrent executions for this lambda function"
+}
+
 variable "retries" {
   type        = number
   default     = null
   description = "Maximum number of retries for the Lambda invocation"
+}
+
+variable "role_arn" {
+  type        = string
+  default     = null
+  description = "An optional lambda execution role"
+}
+
+variable "role_prefix" {
+  type        = string
+  description = "Default prefix for the role"
+  default     = null
+}
+
+variable "runtime" {
+  type        = string
+  default     = "python3.9"
+  description = "The function runtime to use"
 }
 
 variable "s3_bucket" {
@@ -164,6 +176,11 @@ variable "subnet_ids" {
   description = "The subnet ids where this lambda needs to run"
 }
 
+variable "tags" {
+  type        = map(string)
+  description = "A mapping of tags to assign to the bucket"
+}
+
 variable "timeout" {
   type        = number
   default     = 5
@@ -174,21 +191,4 @@ variable "tracing_config_mode" {
   type        = string
   default     = null
   description = "The lambda's AWS X-Ray tracing configuration"
-}
-
-variable "ephemeral_storage_size" {
-  type        = number
-  default     = null
-  description = "The size of the Lambda function Ephemeral storage"
-}
-
-variable "tags" {
-  type        = map(string)
-  description = "A mapping of tags to assign to the bucket"
-}
-
-variable "role_prefix" {
-  type        = string
-  description = "Default prefix for the role"
-  default     = null
 }

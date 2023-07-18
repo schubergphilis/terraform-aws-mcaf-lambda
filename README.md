@@ -51,6 +51,8 @@ No modules.
 | <a name="input_create_s3_dummy_object"></a> [create\_s3\_dummy\_object](#input\_create\_s3\_dummy\_object) | Whether or not to create a S3 dummy object | `bool` | `true` | no |
 | <a name="input_dead_letter_target_arn"></a> [dead\_letter\_target\_arn](#input\_dead\_letter\_target\_arn) | The ARN of an SNS topic or SQS queue to notify when an invocation fails | `string` | `null` | no |
 | <a name="input_description"></a> [description](#input\_description) | A description of the lambda | `string` | `""` | no |
+| <a name="input_destination_on_failure"></a> [destination\_on\_failure](#input\_destination\_on\_failure) | ARN of the destination resource for failed asynchronous invocations | `string` | `null` | no |
+| <a name="input_destination_on_success"></a> [destination\_on\_success](#input\_destination\_on\_success) | ARN of the destination resource for successful asynchronous invocations | `string` | `null` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | A map of environment variables to assign to the lambda | `map(string)` | `null` | no |
 | <a name="input_ephemeral_storage_size"></a> [ephemeral\_storage\_size](#input\_ephemeral\_storage\_size) | The size of the Lambda function Ephemeral storage | `number` | `null` | no |
 | <a name="input_filename"></a> [filename](#input\_filename) | The path to the function's deployment package within the local filesystem | `string` | `null` | no |

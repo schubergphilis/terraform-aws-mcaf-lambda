@@ -1,12 +1,13 @@
 locals {
-  create_policy      = var.create_policy != null ? var.create_policy : var.role_arn == null
-  dead_letter_config = var.dead_letter_target_arn != null ? { create : true } : {}
-  environment        = var.environment != null ? { create : true } : {}
-  execution_type     = var.subnet_ids == null ? "Basic" : "VPCAccess"
-  filename           = var.filename != null ? var.filename : data.archive_file.dummy.output_path
-  source_code_hash   = var.source_code_hash != null ? var.source_code_hash : var.filename != null ? filebase64sha256(var.filename) : null
-  tracing_config     = var.tracing_config_mode != null ? { create : true } : {}
-  vpc_config         = var.subnet_ids != null ? { create : true } : {}
+  create_event_invoke_config = var.retries != null || var.destination_on_failure != null || var.destination_on_success != null ? { create : true } : {}
+  create_policy              = var.create_policy != null ? var.create_policy : var.role_arn == null
+  dead_letter_config         = var.dead_letter_target_arn != null ? { create : true } : {}
+  environment                = var.environment != null ? { create : true } : {}
+  execution_type             = var.subnet_ids == null ? "Basic" : "VPCAccess"
+  filename                   = var.filename != null ? var.filename : data.archive_file.dummy.output_path
+  source_code_hash           = var.source_code_hash != null ? var.source_code_hash : var.filename != null ? filebase64sha256(var.filename) : null
+  tracing_config             = var.tracing_config_mode != null ? { create : true } : {}
+  vpc_config                 = var.subnet_ids != null ? { create : true } : {}
 }
 
 data "aws_iam_policy_document" "default" {
@@ -103,9 +104,31 @@ resource "aws_s3_object" "s3_dummy" {
 }
 
 resource "aws_lambda_function_event_invoke_config" "default" {
-  count                  = var.retries != null ? 1 : 0
+  for_each               = local.create_event_invoke_config
   function_name          = aws_lambda_function.default.function_name
   maximum_retry_attempts = var.retries
+
+  dynamic "destination_config" {
+    for_each = var.destination_on_failure != null || var.destination_on_success != null ? { create : true } : {}
+
+    content {
+      dynamic "on_failure" {
+        for_each = var.destination_on_failure != null ? { create : true } : {}
+
+        content {
+          destination = var.destination_on_failure
+        }
+      }
+
+      dynamic "on_success" {
+        for_each = var.destination_on_success != null ? { create : true } : {}
+
+        content {
+          destination = var.destination_on_success
+        }
+      }
+    }
+  }
 }
 
 // tfsec:ignore:aws-lambda-enable-tracing

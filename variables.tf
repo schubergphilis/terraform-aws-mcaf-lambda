@@ -45,6 +45,18 @@ variable "description" {
   description = "A description of the lambda"
 }
 
+variable "destination_on_failure" {
+  type        = string
+  default     = null
+  description = "ARN of the destination resource for failed asynchronous invocations"
+}
+
+variable "destination_on_success" {
+  type        = string
+  default     = null
+  description = "ARN of the destination resource for successful asynchronous invocations"
+}
+
 variable "environment" {
   type        = map(string)
   default     = null

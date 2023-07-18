@@ -6,15 +6,15 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | > 4.0.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | > 4.8.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
 | <a name="provider_archive"></a> [archive](#provider\_archive) | n/a |
-| <a name="provider_aws"></a> [aws](#provider\_aws) | > 4.0.0 |
-| <a name="provider_aws.lambda"></a> [aws.lambda](#provider\_aws.lambda) | > 4.0.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | > 4.8.0 |
+| <a name="provider_aws.lambda"></a> [aws.lambda](#provider\_aws.lambda) | > 4.8.0 |
 
 ## Modules
 
@@ -65,6 +65,7 @@ No modules.
 | <a name="input_reserved_concurrency"></a> [reserved\_concurrency](#input\_reserved\_concurrency) | The amount of reserved concurrent executions for this lambda function | `number` | `null` | no |
 | <a name="input_retries"></a> [retries](#input\_retries) | Maximum number of retries for the Lambda invocation | `number` | `null` | no |
 | <a name="input_role_arn"></a> [role\_arn](#input\_role\_arn) | An optional lambda execution role | `string` | `null` | no |
+| <a name="input_role_prefix"></a> [role\_prefix](#input\_role\_prefix) | Default prefix for the role | `string` | `null` | no |
 | <a name="input_runtime"></a> [runtime](#input\_runtime) | The function runtime to use | `string` | `"python3.9"` | no |
 | <a name="input_s3_bucket"></a> [s3\_bucket](#input\_s3\_bucket) | The S3 bucket location containing the function's deployment package | `string` | `null` | no |
 | <a name="input_s3_key"></a> [s3\_key](#input\_s3\_key) | The S3 key of an object containing the function's deployment package | `string` | `null` | no |

@@ -136,7 +136,7 @@ variable "reserved_concurrency" {
 
 variable "retries" {
   type        = number
-  default     = null
+  default     = 2
   description = "Maximum number of retries for the Lambda invocation"
 }
 

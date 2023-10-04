@@ -10,15 +10,15 @@ IMPORTANT: We do not pin modules to versions in our examples. We highly recommen
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | > 4.8.0 |
+| <a name="requirement_archive"></a> [archive](#requirement\_archive) | >= 2.0.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.9.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_archive"></a> [archive](#provider\_archive) | n/a |
-| <a name="provider_aws"></a> [aws](#provider\_aws) | > 4.8.0 |
-| <a name="provider_aws.lambda"></a> [aws.lambda](#provider\_aws.lambda) | > 4.8.0 |
+| <a name="provider_archive"></a> [archive](#provider\_archive) | >= 2.0.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.9.0 |
 
 ## Modules
 
@@ -47,9 +47,9 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_name"></a> [name](#input\_name) | The name of the lambda | `string` | n/a | yes |
-| <a name="input_tags"></a> [tags](#input\_tags) | A mapping of tags to assign to the bucket | `map(string)` | n/a | yes |
 | <a name="input_architecture"></a> [architecture](#input\_architecture) | Instruction set architecture of the Lambda function | `string` | `"x86_64"` | no |
 | <a name="input_cloudwatch_logs"></a> [cloudwatch\_logs](#input\_cloudwatch\_logs) | Whether or not to configure a CloudWatch log group | `bool` | `true` | no |
+| <a name="input_code_signing_config_arn"></a> [code\_signing\_config\_arn](#input\_code\_signing\_config\_arn) | ARN for a Code Signing Configuration | `string` | `null` | no |
 | <a name="input_create_policy"></a> [create\_policy](#input\_create\_policy) | Overrule whether the Lambda role policy has to be created | `bool` | `null` | no |
 | <a name="input_create_s3_dummy_object"></a> [create\_s3\_dummy\_object](#input\_create\_s3\_dummy\_object) | Whether or not to create a S3 dummy object | `bool` | `true` | no |
 | <a name="input_dead_letter_target_arn"></a> [dead\_letter\_target\_arn](#input\_dead\_letter\_target\_arn) | The ARN of an SNS topic or SQS queue to notify when an invocation fails | `string` | `null` | no |
@@ -62,7 +62,7 @@ No modules.
 | <a name="input_handler"></a> [handler](#input\_handler) | The function entrypoint in your code | `string` | `"main.handler"` | no |
 | <a name="input_kms_key_arn"></a> [kms\_key\_arn](#input\_kms\_key\_arn) | The ARN of the KMS key used to encrypt the cloudwatch log group and environment variables | `string` | `null` | no |
 | <a name="input_layers"></a> [layers](#input\_layers) | List of Lambda layer ARNs to be used by the Lambda function | `list(string)` | `[]` | no |
-| <a name="input_log_retention"></a> [log\_retention](#input\_log\_retention) | Number of days to retain log events in the specified log group | `number` | `14` | no |
+| <a name="input_log_retention"></a> [log\_retention](#input\_log\_retention) | Number of days to retain log events in the specified log group | `number` | `365` | no |
 | <a name="input_memory_size"></a> [memory\_size](#input\_memory\_size) | The memory size of the lambda | `number` | `null` | no |
 | <a name="input_permissions_boundary"></a> [permissions\_boundary](#input\_permissions\_boundary) | The permissions boundary to set on the role | `string` | `null` | no |
 | <a name="input_policy"></a> [policy](#input\_policy) | A valid lambda policy JSON document. Required if you don't specify a role\_arn | `string` | `null` | no |
@@ -71,13 +71,14 @@ No modules.
 | <a name="input_retries"></a> [retries](#input\_retries) | Maximum number of retries for the Lambda invocation | `number` | `null` | no |
 | <a name="input_role_arn"></a> [role\_arn](#input\_role\_arn) | An optional lambda execution role | `string` | `null` | no |
 | <a name="input_role_prefix"></a> [role\_prefix](#input\_role\_prefix) | Default prefix for the role | `string` | `null` | no |
-| <a name="input_runtime"></a> [runtime](#input\_runtime) | The function runtime to use | `string` | `"python3.9"` | no |
+| <a name="input_runtime"></a> [runtime](#input\_runtime) | The function runtime to use | `string` | `"python3.10"` | no |
 | <a name="input_s3_bucket"></a> [s3\_bucket](#input\_s3\_bucket) | The S3 bucket location containing the function's deployment package | `string` | `null` | no |
 | <a name="input_s3_key"></a> [s3\_key](#input\_s3\_key) | The S3 key of an object containing the function's deployment package | `string` | `null` | no |
 | <a name="input_s3_object_version"></a> [s3\_object\_version](#input\_s3\_object\_version) | The object version containing the function's deployment package | `string` | `null` | no |
 | <a name="input_security_group_egress_rules"></a> [security\_group\_egress\_rules](#input\_security\_group\_egress\_rules) | Security Group egress rules | <pre>list(object({<br>    cidr_ipv4   = string<br>    description = string<br>    from_port   = optional(number, 0)<br>    ip_protocol = optional(string, "-1")<br>    to_port     = optional(number, 0)<br>  }))</pre> | `[]` | no |
 | <a name="input_source_code_hash"></a> [source\_code\_hash](#input\_source\_code\_hash) | Optional source code hash | `string` | `null` | no |
 | <a name="input_subnet_ids"></a> [subnet\_ids](#input\_subnet\_ids) | The subnet ids where this lambda needs to run | `list(string)` | `null` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | A mapping of tags to assign to the bucket | `map(string)` | `{}` | no |
 | <a name="input_timeout"></a> [timeout](#input\_timeout) | The timeout of the lambda | `number` | `5` | no |
 | <a name="input_tracing_config_mode"></a> [tracing\_config\_mode](#input\_tracing\_config\_mode) | The lambda's AWS X-Ray tracing configuration | `string` | `null` | no |
 

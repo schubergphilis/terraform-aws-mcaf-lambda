@@ -15,6 +15,12 @@ variable "cloudwatch_logs" {
   description = "Whether or not to configure a CloudWatch log group"
 }
 
+variable "code_signing_config_arn" {
+  type        = string
+  default     = null
+  description = "ARN for a Code Signing Configuration"
+}
+
 variable "create_policy" {
   type        = bool
   default     = null
@@ -89,7 +95,7 @@ variable "layers" {
 
 variable "log_retention" {
   type        = number
-  default     = 14
+  default     = 365
   description = "Number of days to retain log events in the specified log group"
 }
 
@@ -148,7 +154,7 @@ variable "role_prefix" {
 
 variable "runtime" {
   type        = string
-  default     = "python3.9"
+  default     = "python3.10"
   description = "The function runtime to use"
 }
 
@@ -196,6 +202,7 @@ variable "subnet_ids" {
 
 variable "tags" {
   type        = map(string)
+  default     = {}
   description = "A mapping of tags to assign to the bucket"
 }
 

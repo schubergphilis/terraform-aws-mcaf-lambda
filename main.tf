@@ -71,6 +71,7 @@ data "aws_subnet" "selected" {
 }
 
 resource "aws_security_group" "default" {
+  #checkov:skip=CKV2_AWS_5: False positive finding, the security group is attached.
   count = var.subnet_ids != null ? 1 : 0
 
   name        = var.name
@@ -84,7 +85,7 @@ resource "aws_security_group" "default" {
 }
 
 resource "aws_vpc_security_group_egress_rule" "default" {
-  for_each = var.subnet_ids != null && var.security_group_egress_rules != [] ? { for v in var.security_group_egress_rules : v.cidr_ipv4 => v } : {}
+  for_each = var.subnet_ids != null && length(var.security_group_egress_rules) != 0 ? { for v in var.security_group_egress_rules : v.cidr_ipv4 => v } : {}
 
   cidr_ipv4         = each.value.cidr_ipv4
   description       = each.value.description
@@ -151,6 +152,7 @@ resource "aws_lambda_function_event_invoke_config" "default" {
 // tfsec:ignore:aws-lambda-enable-tracing
 resource "aws_lambda_function" "default" {
   architectures                  = [var.architecture]
+  code_signing_config_arn        = var.code_signing_config_arn
   description                    = var.description
   filename                       = var.s3_bucket == null ? local.filename : null
   function_name                  = var.name
@@ -159,15 +161,15 @@ resource "aws_lambda_function" "default" {
   layers                         = var.layers
   memory_size                    = var.memory_size
   publish                        = var.publish
-  runtime                        = var.runtime
   reserved_concurrent_executions = var.reserved_concurrency
   role                           = var.role_arn != null ? var.role_arn : aws_iam_role.default[0].arn
+  runtime                        = var.runtime
   s3_bucket                      = var.s3_bucket
   s3_key                         = var.s3_key
   s3_object_version              = var.s3_object_version
   source_code_hash               = var.s3_bucket == null ? local.source_code_hash : null
-  timeout                        = var.timeout
   tags                           = var.tags
+  timeout                        = var.timeout
 
   dynamic "dead_letter_config" {
     for_each = local.dead_letter_config

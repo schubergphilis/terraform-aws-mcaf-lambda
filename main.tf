@@ -25,7 +25,8 @@ data "aws_iam_policy_document" "default" {
 }
 
 resource "aws_iam_role" "default" {
-  count                = local.create_policy ? 1 : 0
+  count = local.create_policy ? 1 : 0
+
   name                 = join("-", compact([var.role_prefix, "LambdaRole", var.name]))
   assume_role_policy   = data.aws_iam_policy_document.default.json
   permissions_boundary = var.permissions_boundary
@@ -33,15 +34,16 @@ resource "aws_iam_role" "default" {
 }
 
 resource "aws_iam_role_policy" "default" {
-  count  = local.create_policy ? 1 : 0
+  count = local.create_policy ? 1 : 0
+
   name   = "LambdaRole-${var.name}"
   role   = aws_iam_role.default[0].id
   policy = var.policy
 }
 
 resource "aws_cloudwatch_log_group" "default" {
-  provider          = aws.lambda
-  count             = var.cloudwatch_logs ? 1 : 0
+  count = var.cloudwatch_logs ? 1 : 0
+
   name              = "/aws/lambda/${var.name}"
   kms_key_id        = var.kms_key_arn
   retention_in_days = var.log_retention
@@ -49,28 +51,28 @@ resource "aws_cloudwatch_log_group" "default" {
 }
 
 resource "aws_iam_role_policy_attachment" "default" {
-  provider   = aws.lambda
-  count      = local.create_policy && var.cloudwatch_logs ? 1 : 0
+  count = local.create_policy && var.cloudwatch_logs ? 1 : 0
+
   role       = aws_iam_role.default[0].id
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambda${local.execution_type}ExecutionRole"
 }
 
 resource "aws_iam_role_policy_attachment" "enable_xray_daemon_write" {
-  provider   = aws.lambda
-  count      = local.create_policy && var.tracing_config_mode != null ? 1 : 0
+  count = local.create_policy && var.tracing_config_mode != null ? 1 : 0
+
   role       = aws_iam_role.default[0].id
   policy_arn = "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"
 }
 
 data "aws_subnet" "selected" {
-  provider = aws.lambda
-  count    = var.subnet_ids != null ? 1 : 0
-  id       = var.subnet_ids[0]
+  count = var.subnet_ids != null ? 1 : 0
+
+  id = var.subnet_ids[0]
 }
 
 resource "aws_security_group" "default" {
-  provider    = aws.lambda
-  count       = var.subnet_ids != null ? 1 : 0
+  count = var.subnet_ids != null ? 1 : 0
+
   name        = var.name
   description = "Security group for lambda ${var.name}"
   vpc_id      = data.aws_subnet.selected[0].vpc_id
@@ -103,7 +105,8 @@ data "archive_file" "dummy" {
 }
 
 resource "aws_s3_object" "s3_dummy" {
-  count  = var.s3_bucket != null && var.s3_key != null && var.create_s3_dummy_object ? 1 : 0
+  count = var.s3_bucket != null && var.s3_key != null && var.create_s3_dummy_object ? 1 : 0
+
   bucket = var.s3_bucket
   key    = var.s3_key
   source = data.archive_file.dummy.output_path
@@ -117,7 +120,8 @@ resource "aws_s3_object" "s3_dummy" {
 }
 
 resource "aws_lambda_function_event_invoke_config" "default" {
-  for_each               = local.create_event_invoke_config
+  for_each = local.create_event_invoke_config
+
   function_name          = aws_lambda_function.default.function_name
   maximum_retry_attempts = var.retries
 
@@ -146,7 +150,6 @@ resource "aws_lambda_function_event_invoke_config" "default" {
 
 // tfsec:ignore:aws-lambda-enable-tracing
 resource "aws_lambda_function" "default" {
-  provider                       = aws.lambda
   architectures                  = [var.architecture]
   description                    = var.description
   filename                       = var.s3_bucket == null ? local.filename : null

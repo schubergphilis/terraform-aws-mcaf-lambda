@@ -85,14 +85,17 @@ resource "aws_security_group" "default" {
 }
 
 resource "aws_vpc_security_group_egress_rule" "default" {
-  for_each = var.subnet_ids != null && length(var.security_group_egress_rules) != 0 ? { for v in var.security_group_egress_rules : v.cidr_ipv4 => v } : {}
+  for_each = var.subnet_ids != null && length(var.security_group_egress_rules) != 0 ? { for v in var.security_group_egress_rules : v.description => v } : {}
 
-  cidr_ipv4         = each.value.cidr_ipv4
-  description       = each.value.description
-  from_port         = each.value.from_port
-  ip_protocol       = each.value.ip_protocol
-  security_group_id = aws_security_group.default[0].id
-  to_port           = each.value.to_port
+  cidr_ipv4                    = each.value.cidr_ipv4
+  cidr_ipv6                    = each.value.cidr_ipv6
+  description                  = each.value.description
+  from_port                    = each.value.from_port
+  ip_protocol                  = each.value.ip_protocol
+  prefix_list_id               = each.value.prefix_list_id
+  referenced_security_group_id = each.value.referenced_security_group_id
+  security_group_id            = aws_security_group.default[0].id
+  to_port                      = each.value.to_port
 }
 
 data "archive_file" "dummy" {

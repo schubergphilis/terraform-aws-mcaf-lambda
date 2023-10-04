@@ -178,14 +178,22 @@ variable "s3_object_version" {
 
 variable "security_group_egress_rules" {
   type = list(object({
-    cidr_ipv4   = string
-    description = string
-    from_port   = optional(number, 0)
-    ip_protocol = optional(string, "-1")
-    to_port     = optional(number, 0)
+    cidr_ipv4                    = optional(string)
+    cidr_ipv6                    = optional(string)
+    description                  = string
+    from_port                    = optional(number, 0)
+    ip_protocol                  = optional(string, "-1")
+    prefix_list_id               = optional(string)
+    referenced_security_group_id = optional(string)
+    to_port                      = optional(number, 0)
   }))
   default     = []
   description = "Security Group egress rules"
+
+  validation {
+    condition     = alltrue([for o in var.security_group_egress_rules : (o.cidr_ipv4 != null || o.cidr_ipv6 != null || o.prefix_list_id != null || o.referenced_security_group_id != null)])
+    error_message = "Although \"cidr_ipv4\", \"cidr_ipv6\", \"prefix_list_id\", and \"referenced_security_group_id\" are all marked as optional, you must provide one of them in order to configure the destination of the traffic."
+  }
 }
 
 variable "source_code_hash" {

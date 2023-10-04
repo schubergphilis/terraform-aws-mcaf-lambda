@@ -81,15 +81,15 @@ resource "aws_security_group" "default" {
   }
 }
 
-resource "aws_security_group_rule" "allow_all_egress" {
-  count             = var.subnet_ids != null && var.create_allow_all_egress_rule ? 1 : 0
-  description       = "Allow all outbound traffic to any IPv4 address"
-  type              = "egress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:aws-vpc-no-public-egress-sg
+resource "aws_vpc_security_group_egress_rule" "default" {
+  for_each = var.subnet_ids != null && var.security_group_egress_rules != [] ? { for v in var.security_group_egress_rules : v.cidr_ipv4 => v } : {}
+
+  cidr_ipv4         = each.value.cidr_ipv4
+  description       = each.value.description
+  from_port         = each.value.from_port
+  ip_protocol       = each.value.ip_protocol
   security_group_id = aws_security_group.default[0].id
+  to_port           = each.value.to_port
 }
 
 data "archive_file" "dummy" {

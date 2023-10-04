@@ -15,12 +15,6 @@ variable "cloudwatch_logs" {
   description = "Whether or not to configure a CloudWatch log group"
 }
 
-variable "create_allow_all_egress_rule" {
-  type        = bool
-  default     = false
-  description = "Controls whether an egress rule to any ipv4 address will be created when the lambda is configured to run in a VPC"
-}
-
 variable "create_policy" {
   type        = bool
   default     = null
@@ -174,6 +168,18 @@ variable "s3_object_version" {
   type        = string
   default     = null
   description = "The object version containing the function's deployment package"
+}
+
+variable "security_group_egress_rules" {
+  type = list(object({
+    cidr_ipv4   = string
+    description = string
+    from_port   = optional(number, 0)
+    ip_protocol = optional(string, "-1")
+    to_port     = optional(number, 0)
+  }))
+  default     = []
+  description = "Security Group egress rules"
 }
 
 variable "source_code_hash" {

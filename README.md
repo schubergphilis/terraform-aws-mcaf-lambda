@@ -1,5 +1,9 @@
 # terraform-aws-mcaf-lambda
 
+Terraform module to create an AWS Lambda function.
+
+IMPORTANT: We do not pin modules to versions in our examples. We highly recommend that in your code you pin the version to the exact version you are using so that your infrastructure remains stable.
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
@@ -89,3 +93,7 @@ No modules.
 | <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | If the Lambda is deployed into a VPC this will output the security group id |
 | <a name="output_version"></a> [version](#output\_version) | Latest published version of the Lambda function |
 <!-- END_TF_DOCS -->
+
+## Licensing
+
+100% Open Source and licensed under the Apache License Version 2.0. See [LICENSE](https://github.com/schubergphilis/terraform-aws-mcaf-lambda/blob/master/LICENSE) for full details.

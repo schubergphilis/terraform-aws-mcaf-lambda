@@ -5,6 +5,16 @@ All notable changes to this project will automatically be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.1.0 - 2023-10-05
+
+### What's Changed
+
+#### 🚀 Features
+
+- feature: allow referencing ipv6 and other security groups in the `security_group_egress_rules` variable (#63) @marwinbaumannsbp
+
+**Full Changelog**: https://github.com/schubergphilis/terraform-aws-mcaf-lambda/compare/v1.0.0...v1.1.0
+
 ## v1.0.0 - 2023-10-04
 
 ### What's Changed

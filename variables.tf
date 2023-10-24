@@ -196,7 +196,7 @@ variable "security_group_egress_rules" {
   }
 }
 
-variable "sg_name_prefix" {
+variable "security_group_name_prefix" {
   type        = string
   default     = null
   description = "An optional prefix to create a unique name of the security group. If not provided `var.name` will be used"

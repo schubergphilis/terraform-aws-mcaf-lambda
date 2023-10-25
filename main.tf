@@ -3,11 +3,11 @@ locals {
   create_policy              = var.create_policy != null ? var.create_policy : var.role_arn == null
   dead_letter_config         = var.dead_letter_target_arn != null ? { create : true } : {}
   environment                = var.environment != null ? { create : true } : {}
+  ephemeral_storage          = var.ephemeral_storage_size != null ? { create : true } : {}
   execution_type             = var.subnet_ids == null ? "Basic" : "VPCAccess"
   filename                   = var.filename != null ? var.filename : data.archive_file.dummy.output_path
   source_code_hash           = var.source_code_hash != null ? var.source_code_hash : var.filename != null ? filebase64sha256(var.filename) : null
   tracing_config             = var.tracing_config_mode != null ? { create : true } : {}
-  ephemeral_storage          = var.ephemeral_storage_size != null ? { create : true } : {}
   vpc_config                 = var.subnet_ids != null ? { create : true } : {}
 }
 
@@ -74,7 +74,8 @@ resource "aws_security_group" "default" {
   #checkov:skip=CKV2_AWS_5: False positive finding, the security group is attached.
   count = var.subnet_ids != null ? 1 : 0
 
-  name        = var.name
+  name        = var.security_group_name_prefix == null ? var.name : null
+  name_prefix = var.security_group_name_prefix != null ? var.security_group_name_prefix : null
   description = "Security group for lambda ${var.name}"
   vpc_id      = data.aws_subnet.selected[0].vpc_id
   tags        = var.tags

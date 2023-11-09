@@ -231,3 +231,9 @@ variable "tracing_config_mode" {
   default     = null
   description = "The lambda's AWS X-Ray tracing configuration"
 }
+
+variable "vpc_id" {
+  type        = string
+  default     = null
+  description = "The VPC ID where this Lambda's SG is created."
+}

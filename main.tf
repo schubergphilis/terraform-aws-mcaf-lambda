@@ -9,6 +9,7 @@ locals {
   source_code_hash           = var.source_code_hash != null ? var.source_code_hash : var.filename != null ? filebase64sha256(var.filename) : null
   tracing_config             = var.tracing_config_mode != null ? { create : true } : {}
   vpc_config                 = var.subnet_ids != null ? { create : true } : {}
+  vpc_id                     = var.vpc_id != null ? var.vpc_id : data.aws_subnet.selected[0].vpc_id
 }
 
 data "aws_iam_policy_document" "default" {
@@ -77,7 +78,7 @@ resource "aws_security_group" "default" {
   name        = var.security_group_name_prefix == null ? var.name : null
   name_prefix = var.security_group_name_prefix != null ? var.security_group_name_prefix : null
   description = "Security group for lambda ${var.name}"
-  vpc_id      = data.aws_subnet.selected[0].vpc_id
+  vpc_id      = local.vpc_id
   tags        = var.tags
 
   lifecycle {

@@ -14,8 +14,6 @@ repos:
         args:
           - --autofix
       - id: detect-aws-credentials
-        args:
-          - --allow-missing-credentials
       - id: detect-private-key
   - repo: https://github.com/antonbabenko/pre-commit-terraform
     rev: v1.83.5
@@ -25,7 +23,7 @@ repos:
       - id: terraform_docs
       - id: terraform_validate
   - repo: https://github.com/bridgecrewio/checkov.git
-    rev: 3.0.37
+    rev: 2.3.34
     hooks:
       - id: checkov
         verbose: false

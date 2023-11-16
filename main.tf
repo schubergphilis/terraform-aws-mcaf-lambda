@@ -171,7 +171,7 @@ resource "aws_lambda_function" "default" {
   s3_bucket                      = var.s3_bucket
   s3_key                         = var.s3_key
   s3_object_version              = var.s3_object_version
-  source_code_hash               = var.s3_bucket == null ? local.source_code_hash : null
+  source_code_hash               = local.source_code_hash
   tags                           = var.tags
   timeout                        = var.timeout
 

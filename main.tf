@@ -72,7 +72,7 @@ data "aws_subnet" "selected" {
 
 resource "aws_security_group" "default" {
   #checkov:skip=CKV2_AWS_5: False positive finding, the security group is attached.
-  count = var.subnet_ids != null ? 1 : 0
+  count = var.subnet_ids != null && var.security_group_id == null ? 1 : 0
 
   name        = var.security_group_name_prefix == null ? var.name : null
   name_prefix = var.security_group_name_prefix != null ? var.security_group_name_prefix : null
@@ -83,20 +83,6 @@ resource "aws_security_group" "default" {
   lifecycle {
     create_before_destroy = true
   }
-}
-
-resource "aws_vpc_security_group_egress_rule" "default" {
-  for_each = var.subnet_ids != null && length(var.security_group_egress_rules) != 0 ? { for v in var.security_group_egress_rules : v.description => v } : {}
-
-  cidr_ipv4                    = each.value.cidr_ipv4
-  cidr_ipv6                    = each.value.cidr_ipv6
-  description                  = each.value.description
-  from_port                    = each.value.from_port
-  ip_protocol                  = each.value.ip_protocol
-  prefix_list_id               = each.value.prefix_list_id
-  referenced_security_group_id = each.value.referenced_security_group_id
-  security_group_id            = aws_security_group.default[0].id
-  to_port                      = each.value.to_port
 }
 
 data "archive_file" "dummy" {
@@ -204,7 +190,7 @@ resource "aws_lambda_function" "default" {
 
     content {
       subnet_ids         = var.subnet_ids
-      security_group_ids = [aws_security_group.default[0].id]
+      security_group_ids = [var.security_group_id != null ? var.security_group_id : aws_security_group.default[0].id]
     }
   }
 

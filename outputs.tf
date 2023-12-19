@@ -24,7 +24,7 @@ output "role_arn" {
 }
 
 output "security_group_id" {
-  value       = var.subnet_ids != null ? aws_security_group.default[0].id : ""
+  value       = var.subnet_ids != null ? var.security_group_id != null ? var.security_group_id : aws_security_group.default[0].id : ""
   description = "If the Lambda is deployed into a VPC this will output the security group id"
 }
 

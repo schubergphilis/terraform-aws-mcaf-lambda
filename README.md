@@ -4,6 +4,13 @@ Terraform module to create an AWS Lambda function.
 
 IMPORTANT: We do not pin modules to versions in our examples. We highly recommend that in your code you pin the version to the exact version you are using so that your infrastructure remains stable.
 
+:warning: This is a hotfix branch to work as a fix for Hyperplane ENI issues. Creating a new version takes some time and bigger refactoring. Once this is done this branch will be removed.
+
+See also:
+
+* https://aws.plainenglish.io/dealing-with-you-have-exceeded-the-maximum-limit-for-hyperplane-enis-for-your-account-223147e7ab64
+* https://docs.aws.amazon.com/lambda/latest/dg/foundation-networking.html
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 

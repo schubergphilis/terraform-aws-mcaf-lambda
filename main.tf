@@ -72,7 +72,7 @@ data "aws_subnet" "selected" {
 
 resource "aws_security_group" "default" {
   #checkov:skip=CKV2_AWS_5: False positive finding, the security group is attached.
-  count = var.subnet_ids != null ? 1 : 0
+  count = var.subnet_ids != null && var.security_group_id == null ? 1 : 0
 
   name        = var.security_group_name_prefix == null ? var.name : null
   name_prefix = var.security_group_name_prefix != null ? var.security_group_name_prefix : null
@@ -204,7 +204,7 @@ resource "aws_lambda_function" "default" {
 
     content {
       subnet_ids         = var.subnet_ids
-      security_group_ids = [aws_security_group.default[0].id]
+      security_group_ids = [var.security_group_id != null ? var.security_group_id : aws_security_group.default[0].id]
     }
   }
 

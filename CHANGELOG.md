@@ -5,6 +5,17 @@ All notable changes to this project will automatically be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.1.2-hotfix-reuse-sg - 2023-12-19
+
+This is a temporary hotfix release to enable the reuse of Security Groups. This is done to prevent hitting Hyperplane ENI limits.
+
+See:
+
+* https://aws.plainenglish.io/dealing-with-you-have-exceeded-the-maximum-limit-for-hyperplane-enis-for-your-account-223147e7ab64
+* https://docs.aws.amazon.com/lambda/latest/dg/foundation-networking.html
+
+Structural implementation requires refactoring, therefor a temporary hotfix release (on a hotfix branch)
+
 ## v1.1.2 - 2023-11-17
 
 ### What's Changed

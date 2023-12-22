@@ -1,6 +1,7 @@
 locals {
   create_event_invoke_config = var.retries != null || var.destination_on_failure != null || var.destination_on_success != null ? { create : true } : {}
   create_policy              = var.create_policy != null ? var.create_policy : var.role_arn == null
+  create_security_group      = var.subnet_ids != null && length(var.security_group_config.ids) == 0 && length(var.security_group_config.egress_rules) > 0
   dead_letter_config         = var.dead_letter_target_arn != null ? { create : true } : {}
   environment                = var.environment != null ? { create : true } : {}
   ephemeral_storage          = var.ephemeral_storage_size != null ? { create : true } : {}
@@ -72,10 +73,10 @@ data "aws_subnet" "selected" {
 
 resource "aws_security_group" "default" {
   #checkov:skip=CKV2_AWS_5: False positive finding, the security group is attached.
-  count = var.subnet_ids != null && var.security_group_id == null ? 1 : 0
+  count = local.create_security_group ? 1 : 0
 
-  name        = var.security_group_name_prefix == null ? var.name : null
-  name_prefix = var.security_group_name_prefix != null ? var.security_group_name_prefix : null
+  name        = var.security_group_config.name_prefix == null ? var.name : null
+  name_prefix = var.security_group_config.name_prefix != null ? var.security_group_config.name_prefix : null
   description = "Security group for lambda ${var.name}"
   vpc_id      = data.aws_subnet.selected[0].vpc_id
   tags        = var.tags
@@ -86,7 +87,7 @@ resource "aws_security_group" "default" {
 }
 
 resource "aws_vpc_security_group_egress_rule" "default" {
-  for_each = var.subnet_ids != null && length(var.security_group_egress_rules) != 0 ? { for v in var.security_group_egress_rules : v.description => v } : {}
+  for_each = local.create_security_group ? { for v in var.security_group_config.egress_rules : v.description => v } : {}
 
   cidr_ipv4                    = each.value.cidr_ipv4
   cidr_ipv6                    = each.value.cidr_ipv6
@@ -204,7 +205,7 @@ resource "aws_lambda_function" "default" {
 
     content {
       subnet_ids         = var.subnet_ids
-      security_group_ids = [var.security_group_id != null ? var.security_group_id : aws_security_group.default[0].id]
+      security_group_ids = local.create_security_group ? [aws_security_group.default[0].id] : var.security_group_config.ids
     }
   }
 

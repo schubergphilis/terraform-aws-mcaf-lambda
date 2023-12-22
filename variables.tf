@@ -176,36 +176,38 @@ variable "s3_object_version" {
   description = "The object version containing the function's deployment package"
 }
 
-variable "security_group_id" {
-  type        = string
-  default     = null
-  description = "The security group for running the Lambda within the VPC. If not specified a minimal default SG will be created"
-}
+variable "security_group_config" {
+  type = object({
+    name_prefix = optional(string, null)
+    egress_rules = optional(list(object({
+      cidr_ipv4                    = optional(string)
+      cidr_ipv6                    = optional(string)
+      description                  = string
+      from_port                    = optional(number)
+      ip_protocol                  = optional(string, "-1")
+      prefix_list_id               = optional(string)
+      referenced_security_group_id = optional(string)
+      to_port                      = optional(number)
+    })), [])
+    ids = optional(list(string), [])
+  })
 
-variable "security_group_egress_rules" {
-  type = list(object({
-    cidr_ipv4                    = optional(string)
-    cidr_ipv6                    = optional(string)
-    description                  = string
-    from_port                    = optional(number, 0)
-    ip_protocol                  = optional(string, "-1")
-    prefix_list_id               = optional(string)
-    referenced_security_group_id = optional(string)
-    to_port                      = optional(number, 0)
-  }))
-  default     = []
-  description = "Security Group egress rules"
-
-  validation {
-    condition     = alltrue([for o in var.security_group_egress_rules : (o.cidr_ipv4 != null || o.cidr_ipv6 != null || o.prefix_list_id != null || o.referenced_security_group_id != null)])
-    error_message = "Although \"cidr_ipv4\", \"cidr_ipv6\", \"prefix_list_id\", and \"referenced_security_group_id\" are all marked as optional, you must provide one of them in order to configure the destination of the traffic."
+  default = {
+    name_prefix  = null
+    egress_rules = []
+    ids          = []
   }
-}
 
-variable "security_group_name_prefix" {
-  type        = string
-  default     = null
-  description = "An optional prefix to create a unique name of the security group. If not provided `var.name` will be used"
+  description = "Configuration for security group, leave empty to not create a security group. When this is set the subnet_ids also needs to be set"
+  validation {
+    condition = (var.security_group_config.name_prefix == null && length(var.security_group_config.egress_rules) == 0 && length(var.security_group_config.ids) == 0) || 1 == sum([for c in [ // hack to make the validation work in an XOR fashion
+      length(var.security_group_config.egress_rules) != 0,
+      length(var.security_group_config.ids) != 0,
+      ] : c ? 1 : 0]) && (anytrue([for rule in var.security_group_config.egress_rules :
+      rule.cidr_ipv4 != null || rule.cidr_ipv6 != null || rule.prefix_list_id != null || rule.referenced_security_group_id != null
+    ]) || length(var.security_group_config.egress_rules) == 0)
+    error_message = "In the config either the ids or the egress_rules attribute must be set but not both. Furthermore, at least one of the optional attributes must be set in the egress_rules block."
+  }
 }
 
 variable "source_code_hash" {
@@ -217,7 +219,7 @@ variable "source_code_hash" {
 variable "subnet_ids" {
   type        = list(string)
   default     = null
-  description = "The subnet ids where this lambda needs to run"
+  description = "The subnet IDs where this lambda needs to run"
 }
 
 variable "tags" {

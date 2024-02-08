@@ -27,6 +27,12 @@ variable "create_policy" {
   description = "Overrule whether the Lambda role policy has to be created"
 }
 
+variable "create_security_group" {
+  type        = bool
+  default     = null
+  description = "Overrule whether the default VPC Security group has to be created"
+}
+
 variable "create_s3_dummy_object" {
   type        = bool
   default     = true

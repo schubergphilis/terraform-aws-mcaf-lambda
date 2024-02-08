@@ -1,6 +1,7 @@
 locals {
   create_event_invoke_config = var.retries != null || var.destination_on_failure != null || var.destination_on_success != null ? { create : true } : {}
   create_policy              = var.create_policy != null ? var.create_policy : var.role_arn == null
+  create_security_group      = var.create_security_group != null ? var.create_security_group : var.subnet_ids != null && var.security_group_id == null
   dead_letter_config         = var.dead_letter_target_arn != null ? { create : true } : {}
   environment                = var.environment != null ? { create : true } : {}
   ephemeral_storage          = var.ephemeral_storage_size != null ? { create : true } : {}
@@ -72,7 +73,7 @@ data "aws_subnet" "selected" {
 
 resource "aws_security_group" "default" {
   #checkov:skip=CKV2_AWS_5: False positive finding, the security group is attached.
-  count = var.subnet_ids != null && var.security_group_id == null ? 1 : 0
+  count = local.create_security_group ? 1 : 0
 
   name        = var.security_group_name_prefix == null ? var.name : null
   name_prefix = var.security_group_name_prefix != null ? var.security_group_name_prefix : null

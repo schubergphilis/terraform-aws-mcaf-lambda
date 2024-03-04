@@ -1,6 +1,6 @@
 locals {
   create_event_invoke_config = var.retries != null || var.destination_on_failure != null || var.destination_on_success != null ? { create : true } : {}
-  create_policy              = var.create_policy != null ? var.create_policy : var.role_arn == null
+  create_policy              = var.role_arn == null && (var.create_policy != null ? var.create_policy : true)
   create_security_group      = var.subnet_ids != null && length(var.security_group_config.ids) == 0 && length(var.security_group_config.egress_rules) > 0
   dead_letter_config         = var.dead_letter_target_arn != null ? { create : true } : {}
   environment                = var.environment != null ? { create : true } : {}
@@ -26,7 +26,7 @@ data "aws_iam_policy_document" "default" {
 }
 
 resource "aws_iam_role" "default" {
-  count = local.create_policy ? 1 : 0
+  count = local.create_policy || var.role_arn == null ? 1 : 0
 
   name                 = join("-", compact([var.role_prefix, "LambdaRole", var.name]))
   assume_role_policy   = data.aws_iam_policy_document.default.json
@@ -35,7 +35,7 @@ resource "aws_iam_role" "default" {
 }
 
 resource "aws_iam_role_policy" "default" {
-  count = local.create_policy ? 1 : 0
+  count = local.create_policy && var.policy != null ? 1 : 0
 
   name   = "LambdaRole-${var.name}"
   role   = aws_iam_role.default[0].id

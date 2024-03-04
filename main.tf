@@ -1,7 +1,7 @@
 locals {
   create_event_invoke_config = var.retries != null || var.destination_on_failure != null || var.destination_on_success != null ? { create : true } : {}
   create_policy              = var.role_arn == null && (var.create_policy != null ? var.create_policy : true)
-  create_security_group      = var.subnet_ids != null && length(var.security_group_config.ids) == 0 && length(var.security_group_config.egress_rules) > 0
+  create_security_group      = var.subnet_ids != null && length(var.security_group_config.ids) == 0 || length(var.security_group_config.egress_rules) > 0
   dead_letter_config         = var.dead_letter_target_arn != null ? { create : true } : {}
   environment                = var.environment != null ? { create : true } : {}
   ephemeral_storage          = var.ephemeral_storage_size != null ? { create : true } : {}

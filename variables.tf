@@ -42,7 +42,7 @@ variable "dead_letter_target_arn" {
 variable "description" {
   type        = string
   default     = ""
-  description = "A description of the lambda"
+  description = "A description of the Lambda"
 }
 
 variable "destination_on_failure" {
@@ -60,7 +60,7 @@ variable "destination_on_success" {
 variable "environment" {
   type        = map(string)
   default     = null
-  description = "A map of environment variables to assign to the lambda"
+  description = "A map of environment variables to assign to the Lambda"
 }
 
 variable "ephemeral_storage_size" {
@@ -102,12 +102,12 @@ variable "log_retention" {
 variable "memory_size" {
   type        = number
   default     = null
-  description = "The memory size of the lambda"
+  description = "The memory size of the Lambda"
 }
 
 variable "name" {
   type        = string
-  description = "The name of the lambda"
+  description = "The name of the Lambda"
 }
 
 variable "permissions_boundary" {
@@ -119,19 +119,19 @@ variable "permissions_boundary" {
 variable "policy" {
   type        = string
   default     = null
-  description = "A valid lambda policy JSON document. Required if you don't specify a role_arn"
+  description = "A valid Lambda policy JSON document. Required if you don't specify a role_arn"
 }
 
 variable "publish" {
   type        = bool
   default     = false
-  description = "Whether to publish creation/change as new lambda function version"
+  description = "Whether to publish creation/change as new Lambda function version"
 }
 
 variable "reserved_concurrency" {
   type        = number
   default     = null
-  description = "The amount of reserved concurrent executions for this lambda function"
+  description = "The amount of reserved concurrent executions for this Lambda function"
 }
 
 variable "retries" {
@@ -143,13 +143,13 @@ variable "retries" {
 variable "role_arn" {
   type        = string
   default     = null
-  description = "An optional lambda execution role"
+  description = "An optional Lambda execution role"
 }
 
 variable "role_prefix" {
   type        = string
-  description = "Default prefix for the role"
   default     = null
+  description = "Default prefix for the role"
 }
 
 variable "runtime" {
@@ -199,6 +199,7 @@ variable "security_group_config" {
   }
 
   description = "Configuration for security group, leave empty to not create a security group. When this is set the subnet_ids also needs to be set"
+
   validation {
     condition = (var.security_group_config.name_prefix == null && length(var.security_group_config.egress_rules) == 0 && length(var.security_group_config.ids) == 0) || 1 == sum([for c in [ // hack to make the validation work in an XOR fashion
       length(var.security_group_config.egress_rules) != 0,
@@ -206,7 +207,7 @@ variable "security_group_config" {
       ] : c ? 1 : 0]) && (anytrue([for rule in var.security_group_config.egress_rules :
       rule.cidr_ipv4 != null || rule.cidr_ipv6 != null || rule.prefix_list_id != null || rule.referenced_security_group_id != null
     ]) || length(var.security_group_config.egress_rules) == 0)
-    error_message = "In the config either the ids or the egress_rules attribute must be set but not both. Furthermore, at least one of the optional attributes must be set in the egress_rules block."
+    error_message = "In the config either the IDs or the egress_rules attribute must be set but not both. Furthermore, at least one of the optional attributes must be set in the egress_rules block"
   }
 }
 
@@ -219,7 +220,7 @@ variable "source_code_hash" {
 variable "subnet_ids" {
   type        = list(string)
   default     = null
-  description = "The subnet IDs where this lambda needs to run"
+  description = "The subnet IDs where this Lambda needs to run"
 }
 
 variable "tags" {
@@ -231,11 +232,11 @@ variable "tags" {
 variable "timeout" {
   type        = number
   default     = 5
-  description = "The timeout of the lambda"
+  description = "The timeout of the Lambda"
 }
 
 variable "tracing_config_mode" {
   type        = string
   default     = null
-  description = "The lambda's AWS X-Ray tracing configuration"
+  description = "The Lambda's AWS X-Ray tracing configuration"
 }

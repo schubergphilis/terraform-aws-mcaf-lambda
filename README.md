@@ -76,7 +76,7 @@ No modules.
 | <a name="input_s3_key"></a> [s3\_key](#input\_s3\_key) | The S3 key of an object containing the function's deployment package | `string` | `null` | no |
 | <a name="input_s3_object_version"></a> [s3\_object\_version](#input\_s3\_object\_version) | The object version containing the function's deployment package | `string` | `null` | no |
 | <a name="input_security_group_egress_rules"></a> [security\_group\_egress\_rules](#input\_security\_group\_egress\_rules) | Security Group egress rules | <pre>list(object({<br>    cidr_ipv4                    = optional(string)<br>    cidr_ipv6                    = optional(string)<br>    description                  = string<br>    from_port                    = optional(number, 0)<br>    ip_protocol                  = optional(string, "-1")<br>    prefix_list_id               = optional(string)<br>    referenced_security_group_id = optional(string)<br>    to_port                      = optional(number, 0)<br>  }))</pre> | `[]` | no |
-| <a name="input_security_group_id"></a> [security\_group\_id](#input\_security\_group\_id) | The security group for running the Lambda within the VPC. If not specified a minimal default SG will be created | `string` | `null` | no |
+| <a name="input_security_group_ids"></a> [security\_group\_ids](#input\_security\_group\_ids) | The security group(s) for running the Lambda within the VPC. If not specified a minimal default SG will be created | `list(string)` | `[]` | no |
 | <a name="input_security_group_name_prefix"></a> [security\_group\_name\_prefix](#input\_security\_group\_name\_prefix) | An optional prefix to create a unique name of the security group. If not provided `var.name` will be used | `string` | `null` | no |
 | <a name="input_source_code_hash"></a> [source\_code\_hash](#input\_source\_code\_hash) | Optional source code hash | `string` | `null` | no |
 | <a name="input_subnet_ids"></a> [subnet\_ids](#input\_subnet\_ids) | The subnet ids where this lambda needs to run | `list(string)` | `null` | no |
@@ -93,7 +93,7 @@ No modules.
 | <a name="output_name"></a> [name](#output\_name) | Function name of the Lambda |
 | <a name="output_qualified_arn"></a> [qualified\_arn](#output\_qualified\_arn) | Qualified ARN of the Lambda |
 | <a name="output_role_arn"></a> [role\_arn](#output\_role\_arn) | ARN of the lambda execution role |
-| <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | If the Lambda is deployed into a VPC this will output the security group id |
+| <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | If the Lambda is deployed into a VPC this will output the genetered security group id (if no security groups are specified) |
 | <a name="output_version"></a> [version](#output\_version) | Latest published version of the Lambda function |
 <!-- END_TF_DOCS -->
 

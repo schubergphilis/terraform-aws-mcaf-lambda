@@ -9,7 +9,7 @@ locals {
   source_code_hash           = var.source_code_hash != null ? var.source_code_hash : var.filename != null ? filebase64sha256(var.filename) : null
   tracing_config             = var.tracing_config_mode != null ? { create : true } : {}
   vpc_config                 = var.subnet_ids != null ? { create : true } : {}
-  security_group_ids         = length(var.security_group_ids) > 0 ? [var.security_group_ids] : [aws_security_group.default[0].id]
+  security_group_ids         = length(var.security_group_ids) > 0 ? var.security_group_ids : [aws_security_group.default[0].id]
 }
 
 data "aws_iam_policy_document" "default" {
@@ -87,7 +87,7 @@ resource "aws_security_group" "default" {
 }
 
 resource "aws_vpc_security_group_egress_rule" "default" {
-  for_each = var.subnet_ids != null && length(var.security_group_egress_rules) != 0 ? { for v in var.security_group_egress_rules : v.description => v } : {}
+  for_each = var.subnet_ids != null && length(var.security_group_ids) == 0 && length(var.security_group_egress_rules) != 0 ? { for v in var.security_group_egress_rules : v.description => v } : {}
 
   cidr_ipv4                    = each.value.cidr_ipv4
   cidr_ipv6                    = each.value.cidr_ipv6

@@ -176,10 +176,10 @@ variable "s3_object_version" {
   description = "The object version containing the function's deployment package"
 }
 
-variable "security_group_id" {
-  type        = string
-  default     = null
-  description = "The security group for running the Lambda within the VPC. If not specified a minimal default SG will be created"
+variable "security_group_ids" {
+  type        = list(string)
+  default     = []
+  description = "The security group(s) for running the Lambda within the VPC. If not specified a minimal default SG will be created"
 }
 
 variable "security_group_egress_rules" {

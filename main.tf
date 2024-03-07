@@ -9,6 +9,7 @@ locals {
   source_code_hash           = var.source_code_hash != null ? var.source_code_hash : var.filename != null ? filebase64sha256(var.filename) : null
   tracing_config             = var.tracing_config_mode != null ? { create : true } : {}
   vpc_config                 = var.subnet_ids != null ? { create : true } : {}
+  security_group_ids         = length(var.security_group_ids) > 0 ? [var.security_group_ids] : [aws_security_group.default[0].id]
 }
 
 data "aws_iam_policy_document" "default" {
@@ -72,7 +73,7 @@ data "aws_subnet" "selected" {
 
 resource "aws_security_group" "default" {
   #checkov:skip=CKV2_AWS_5: False positive finding, the security group is attached.
-  count = var.subnet_ids != null && var.security_group_id == null ? 1 : 0
+  count = var.subnet_ids != null && length(var.security_group_ids) == 0 ? 1 : 0
 
   name        = var.security_group_name_prefix == null ? var.name : null
   name_prefix = var.security_group_name_prefix != null ? var.security_group_name_prefix : null
@@ -204,7 +205,7 @@ resource "aws_lambda_function" "default" {
 
     content {
       subnet_ids         = var.subnet_ids
-      security_group_ids = [var.security_group_id != null ? var.security_group_id : aws_security_group.default[0].id]
+      security_group_ids = local.security_group_ids
     }
   }
 

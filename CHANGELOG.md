@@ -5,6 +5,21 @@ All notable changes to this project will automatically be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.2.0 - 2024-03-08
+
+### What's Changed
+
+#### 🚀 Features
+
+* feature: Add security group as input (#67) @fatbasstard
+
+#### 🐛 Bug Fixes
+
+* bug: fixes creating role when no role_arn is specified  (#69) @stefanwb
+* feature: Add security group as input (#67) @fatbasstard
+
+**Full Changelog**: https://github.com/schubergphilis/terraform-aws-mcaf-lambda/compare/v1.1.2...v1.2.0
+
 ## v1.1.2-hotfix-reuse-sg - 2023-12-19
 
 This is a temporary hotfix release to enable the reuse of Security Groups. This is done to prevent hitting Hyperplane ENI limits.

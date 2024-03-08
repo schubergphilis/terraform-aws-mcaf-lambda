@@ -119,7 +119,7 @@ variable "name" {
 variable "package_type" {
   type        = string
   default     = null
-  description = "The Lambda deployment package type. Valid options: Zip or Image"
+  description = "The Lambda deployment package type. Valid options: zip or image"
 }
 
 variable "permissions_boundary" {

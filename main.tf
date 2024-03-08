@@ -159,7 +159,7 @@ resource "aws_lambda_function" "default" {
   architectures                  = [var.architecture]
   code_signing_config_arn        = var.code_signing_config_arn
   description                    = var.description
-  filename                       = var.s3_bucket == null ? var.image_uri == null ? local.filename : null : null
+  filename                       = var.s3_bucket == null || var.image_uri == null ? local.filename : null
   function_name                  = var.name
   image_uri                      = var.image_uri
   handler                        = var.package_type == "Zip" ? var.handler : null

@@ -159,16 +159,18 @@ resource "aws_lambda_function" "default" {
   architectures                  = [var.architecture]
   code_signing_config_arn        = var.code_signing_config_arn
   description                    = var.description
-  filename                       = var.s3_bucket == null ? local.filename : null
+  filename                       = var.s3_bucket == null ? var.image_uri == null ? local.filename : null : null
   function_name                  = var.name
-  handler                        = var.handler
+  image_uri                      = var.image_uri
+  handler                        = var.package_type == "Zip" ? var.handler : null
   kms_key_arn                    = var.environment != null ? var.kms_key_arn : null
   layers                         = var.layers
   memory_size                    = var.memory_size
+  package_type                   = var.package_type != null ? var.package_type : "Zip"
   publish                        = var.publish
   reserved_concurrent_executions = var.reserved_concurrency
   role                           = var.role_arn != null ? var.role_arn : aws_iam_role.default[0].arn
-  runtime                        = var.runtime
+  runtime                        = var.package_type == "Zip" ? var.runtime : null
   s3_bucket                      = var.s3_bucket
   s3_key                         = var.s3_key
   s3_object_version              = var.s3_object_version

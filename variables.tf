@@ -75,6 +75,12 @@ variable "filename" {
   description = "The path to the function's deployment package within the local filesystem"
 }
 
+variable "image_uri" {
+  type        = string
+  default     = null
+  description = "The ECR image URI containing the function's deployment package."
+}
+
 variable "handler" {
   type        = string
   default     = "main.handler"
@@ -108,6 +114,12 @@ variable "memory_size" {
 variable "name" {
   type        = string
   description = "The name of the lambda"
+}
+
+variable "package_type" {
+  type        = string
+  default     = null
+  description = "The Lambda deployment package type. Valid options: Zip or Image"
 }
 
 variable "permissions_boundary" {

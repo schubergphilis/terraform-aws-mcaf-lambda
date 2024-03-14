@@ -23,9 +23,9 @@ output "role_arn" {
   description = "ARN of the lambda execution role"
 }
 
-output "security_group_id" {
-  value       = try(aws_security_group.default[0].id, "")
-  description = "If the Lambda is deployed into a VPC this will output the genetered security group id (if no security groups are specified)"
+output "security_group_ids" {
+  value       = length(try(var.vpc_config.security_group_ids, [])) > 0 ? var.vpc_config.security_group_ids : try(aws_security_group.default[0].id, [])
+  description = "Security groups associated with the Lambda"
 }
 
 output "version" {

@@ -4,11 +4,11 @@ locals {
   dead_letter_config         = var.dead_letter_target_arn != null ? { create : true } : {}
   environment                = var.environment != null ? { create : true } : {}
   ephemeral_storage          = var.ephemeral_storage_size != null ? { create : true } : {}
-  execution_type             = var.subnet_ids == null ? "Basic" : "VPCAccess"
+  execution_type             = var.vpc_config == null ? "Basic" : "VPCAccess"
   filename                   = var.filename != null ? var.filename : data.archive_file.dummy.output_path
   source_code_hash           = var.source_code_hash != null ? var.source_code_hash : var.filename != null ? filebase64sha256(var.filename) : null
   tracing_config             = var.tracing_config_mode != null ? { create : true } : {}
-  vpc_config                 = var.subnet_ids != null ? { create : true } : {}
+  create_security_group      = var.vpc_config != null ? length(var.vpc_config.security_group_ids) == 0 : false
 }
 
 data "aws_iam_policy_document" "default" {
@@ -65,17 +65,17 @@ resource "aws_iam_role_policy_attachment" "enable_xray_daemon_write" {
 }
 
 data "aws_subnet" "selected" {
-  count = var.subnet_ids != null ? 1 : 0
+  count = var.vpc_config != null ? 1 : 0
 
-  id = var.subnet_ids[0]
+  id = var.vpc_config.subnet_ids[0]
 }
 
 resource "aws_security_group" "default" {
   #checkov:skip=CKV2_AWS_5: False positive finding, the security group is attached.
-  count = var.subnet_ids != null && length(var.security_group_ids) == 0 ? 1 : 0
+  count = local.create_security_group ? 1 : 0
 
-  name        = var.security_group_name_prefix == null ? var.name : null
-  name_prefix = var.security_group_name_prefix != null ? var.security_group_name_prefix : null
+  name        = try(var.vpc_config.security_group_name_prefix, null) == null ? var.name : null
+  name_prefix = try(var.vpc_config.security_group_name_prefix, null) != null ? var.vpc_config.security_group_name_prefix : null
   description = "Security group for lambda ${var.name}"
   vpc_id      = data.aws_subnet.selected[0].vpc_id
   tags        = var.tags
@@ -83,20 +83,6 @@ resource "aws_security_group" "default" {
   lifecycle {
     create_before_destroy = true
   }
-}
-
-resource "aws_vpc_security_group_egress_rule" "default" {
-  for_each = var.subnet_ids != null && length(var.security_group_ids) == 0 && length(var.security_group_egress_rules) != 0 ? { for v in var.security_group_egress_rules : v.description => v } : {}
-
-  cidr_ipv4                    = each.value.cidr_ipv4
-  cidr_ipv6                    = each.value.cidr_ipv6
-  description                  = each.value.description
-  from_port                    = each.value.from_port
-  ip_protocol                  = each.value.ip_protocol
-  prefix_list_id               = each.value.prefix_list_id
-  referenced_security_group_id = each.value.referenced_security_group_id
-  security_group_id            = aws_security_group.default[0].id
-  to_port                      = each.value.to_port
 }
 
 data "archive_file" "dummy" {
@@ -200,11 +186,11 @@ resource "aws_lambda_function" "default" {
   }
 
   dynamic "vpc_config" {
-    for_each = local.vpc_config
+    for_each = var.vpc_config != null ? { create : true } : {}
 
     content {
-      subnet_ids         = var.subnet_ids
-      security_group_ids = length(var.security_group_ids) > 0 ? var.security_group_ids : [aws_security_group.default[0].id]
+      subnet_ids         = var.vpc_config.subnet_ids
+      security_group_ids = length(var.vpc_config.security_group_ids) > 0 ? var.vpc_config.security_group_ids : [aws_security_group.default[0].id]
     }
   }
 

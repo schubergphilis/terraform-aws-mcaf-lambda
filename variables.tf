@@ -176,48 +176,10 @@ variable "s3_object_version" {
   description = "The object version containing the function's deployment package"
 }
 
-variable "security_group_ids" {
-  type        = list(string)
-  default     = []
-  description = "The security group(s) for running the Lambda within the VPC. If not specified a minimal default SG will be created"
-}
-
-variable "security_group_egress_rules" {
-  type = list(object({
-    cidr_ipv4                    = optional(string)
-    cidr_ipv6                    = optional(string)
-    description                  = string
-    from_port                    = optional(number, 0)
-    ip_protocol                  = optional(string, "-1")
-    prefix_list_id               = optional(string)
-    referenced_security_group_id = optional(string)
-    to_port                      = optional(number, 0)
-  }))
-  default     = []
-  description = "Security Group egress rules"
-
-  validation {
-    condition     = alltrue([for o in var.security_group_egress_rules : (o.cidr_ipv4 != null || o.cidr_ipv6 != null || o.prefix_list_id != null || o.referenced_security_group_id != null)])
-    error_message = "Although \"cidr_ipv4\", \"cidr_ipv6\", \"prefix_list_id\", and \"referenced_security_group_id\" are all marked as optional, you must provide one of them in order to configure the destination of the traffic."
-  }
-}
-
-variable "security_group_name_prefix" {
-  type        = string
-  default     = null
-  description = "An optional prefix to create a unique name of the security group. If not provided `var.name` will be used"
-}
-
 variable "source_code_hash" {
   type        = string
   default     = null
   description = "Optional source code hash"
-}
-
-variable "subnet_ids" {
-  type        = list(string)
-  default     = null
-  description = "The subnet ids where this lambda needs to run"
 }
 
 variable "tags" {
@@ -236,4 +198,15 @@ variable "tracing_config_mode" {
   type        = string
   default     = null
   description = "The lambda's AWS X-Ray tracing configuration"
+}
+
+variable "vpc_config" {
+  type = object({
+    ipv6_allowed_for_dual_stack = optional(bool, false)
+    security_group_ids          = optional(list(string), [])
+    security_group_name_prefix  = optional(string, null)
+    subnet_ids                  = list(string)
+  })
+  default     = null
+  description = "The VPC configuration for Lambda function"
 }

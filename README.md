@@ -37,7 +37,6 @@ No modules.
 | [aws_lambda_function_event_invoke_config.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_function_event_invoke_config) | resource |
 | [aws_s3_object.s3_dummy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_object) | resource |
 | [aws_security_group.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
-| [aws_vpc_security_group_egress_rule.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_security_group_egress_rule) | resource |
 | [archive_file.dummy](https://registry.terraform.io/providers/hashicorp/archive/latest/docs/data-sources/file) | data source |
 | [aws_iam_policy_document.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_subnet.selected](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnet) | data source |
@@ -75,14 +74,11 @@ No modules.
 | <a name="input_s3_bucket"></a> [s3\_bucket](#input\_s3\_bucket) | The S3 bucket location containing the function's deployment package | `string` | `null` | no |
 | <a name="input_s3_key"></a> [s3\_key](#input\_s3\_key) | The S3 key of an object containing the function's deployment package | `string` | `null` | no |
 | <a name="input_s3_object_version"></a> [s3\_object\_version](#input\_s3\_object\_version) | The object version containing the function's deployment package | `string` | `null` | no |
-| <a name="input_security_group_egress_rules"></a> [security\_group\_egress\_rules](#input\_security\_group\_egress\_rules) | Security Group egress rules | <pre>list(object({<br>    cidr_ipv4                    = optional(string)<br>    cidr_ipv6                    = optional(string)<br>    description                  = string<br>    from_port                    = optional(number, 0)<br>    ip_protocol                  = optional(string, "-1")<br>    prefix_list_id               = optional(string)<br>    referenced_security_group_id = optional(string)<br>    to_port                      = optional(number, 0)<br>  }))</pre> | `[]` | no |
-| <a name="input_security_group_ids"></a> [security\_group\_ids](#input\_security\_group\_ids) | The security group(s) for running the Lambda within the VPC. If not specified a minimal default SG will be created | `list(string)` | `[]` | no |
-| <a name="input_security_group_name_prefix"></a> [security\_group\_name\_prefix](#input\_security\_group\_name\_prefix) | An optional prefix to create a unique name of the security group. If not provided `var.name` will be used | `string` | `null` | no |
 | <a name="input_source_code_hash"></a> [source\_code\_hash](#input\_source\_code\_hash) | Optional source code hash | `string` | `null` | no |
-| <a name="input_subnet_ids"></a> [subnet\_ids](#input\_subnet\_ids) | The subnet ids where this lambda needs to run | `list(string)` | `null` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | A mapping of tags to assign to the bucket | `map(string)` | `{}` | no |
 | <a name="input_timeout"></a> [timeout](#input\_timeout) | The timeout of the lambda | `number` | `5` | no |
 | <a name="input_tracing_config_mode"></a> [tracing\_config\_mode](#input\_tracing\_config\_mode) | The lambda's AWS X-Ray tracing configuration | `string` | `null` | no |
+| <a name="input_vpc_config"></a> [vpc\_config](#input\_vpc\_config) | The VPC configuration for Lambda function | <pre>object({<br>    ipv6_allowed_for_dual_stack = optional(bool, false)<br>    security_group_ids          = optional(list(string), [])<br>    security_group_name_prefix  = optional(string, null)<br>    subnet_ids                  = list(string)<br>  })</pre> | `null` | no |
 
 ## Outputs
 
@@ -93,7 +89,7 @@ No modules.
 | <a name="output_name"></a> [name](#output\_name) | Function name of the Lambda |
 | <a name="output_qualified_arn"></a> [qualified\_arn](#output\_qualified\_arn) | Qualified ARN of the Lambda |
 | <a name="output_role_arn"></a> [role\_arn](#output\_role\_arn) | ARN of the lambda execution role |
-| <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | If the Lambda is deployed into a VPC this will output the genetered security group id (if no security groups are specified) |
+| <a name="output_security_group_ids"></a> [security\_group\_ids](#output\_security\_group\_ids) | Security groups associated with the Lambda |
 | <a name="output_version"></a> [version](#output\_version) | Latest published version of the Lambda function |
 <!-- END_TF_DOCS -->
 

@@ -93,6 +93,7 @@ No modules.
 | <a name="output_name"></a> [name](#output\_name) | Function name of the Lambda |
 | <a name="output_qualified_arn"></a> [qualified\_arn](#output\_qualified\_arn) | Qualified ARN of the Lambda |
 | <a name="output_role_arn"></a> [role\_arn](#output\_role\_arn) | ARN of the lambda execution role |
+| <a name="output_role_name"></a> [role\_name](#output\_role\_name) | Name of the lambda execution role |
 | <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | If the Lambda is deployed into a VPC this will output the genetered security group id (if no security groups are specified) |
 | <a name="output_version"></a> [version](#output\_version) | Latest published version of the Lambda function |
 <!-- END_TF_DOCS -->

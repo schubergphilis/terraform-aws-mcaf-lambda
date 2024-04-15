@@ -23,6 +23,11 @@ output "role_arn" {
   description = "ARN of the lambda execution role"
 }
 
+output "role_name" {
+  value       = var.role_arn != null ? element(split("/", var.role_arn), length(split("/", var.role_arn)) - 1) : aws_iam_role.default[0].name
+  description = "Name of the lambda execution role"
+}
+
 output "security_group_id" {
   value       = try(aws_security_group.default[0].id, "")
   description = "If the Lambda is deployed into a VPC this will output the genetered security group id (if no security groups are specified)"

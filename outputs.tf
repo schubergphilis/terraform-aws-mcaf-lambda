@@ -24,7 +24,7 @@ output "role_arn" {
 }
 
 output "role_name" {
-  value       = var.role_arn != null ? element(split("/", var.role_arn), length(split("/", var.role_arn)) - 1) : aws_iam_role.default[0].name
+  value       = element(split("/", aws_lambda_function.default.role), length(split("/", aws_lambda_function.default.role)) - 1)
   description = "Name of the lambda execution role"
 }
 

@@ -119,7 +119,7 @@ variable "permissions_boundary" {
 variable "policy" {
   type        = string
   default     = null
-  description = "A valid lambda policy JSON document. Required if you don't specify a role_arn"
+  description = "A valid lambda policy JSON document. This policy is used if you don't specify a role_arn"
 }
 
 variable "publish" {

@@ -1,6 +1,5 @@
 locals {
   create_event_invoke_config = var.retries != null || var.destination_on_failure != null || var.destination_on_success != null ? { create : true } : {}
-  create_policy              = var.role_arn == null && (var.create_policy != null ? var.create_policy : true)
   dead_letter_config         = var.dead_letter_target_arn != null ? { create : true } : {}
   environment                = var.environment != null ? { create : true } : {}
   ephemeral_storage          = var.ephemeral_storage_size != null ? { create : true } : {}
@@ -11,34 +10,23 @@ locals {
   vpc_config                 = var.subnet_ids != null ? { create : true } : {}
 }
 
-data "aws_iam_policy_document" "default" {
-  statement {
-    actions = [
-      "sts:AssumeRole"
-    ]
-
-    principals {
-      type        = "Service"
-      identifiers = ["edgelambda.amazonaws.com", "lambda.amazonaws.com"]
-    }
-  }
-}
-
-resource "aws_iam_role" "default" {
+module "lambda_role" {
   count = var.role_arn == null ? 1 : 0
 
-  name                 = join("-", compact([var.role_prefix, "LambdaRole", var.name]))
-  assume_role_policy   = data.aws_iam_policy_document.default.json
-  permissions_boundary = var.permissions_boundary
-  tags                 = var.tags
-}
+  source                = "github.com/schubergphilis/terraform-aws-mcaf-role?ref=v0.3.3"
+  name                  = join("-", compact([var.role_prefix, "LambdaRole", var.name]))
+  create_policy         = true
+  permissions_boundary  = var.permissions_boundary
+  postfix               = false
+  principal_identifiers = ["edgelambda.amazonaws.com", "lambda.amazonaws.com"]
+  principal_type        = "Service"
+  role_policy           = var.policy
+  tags                  = var.tags
 
-resource "aws_iam_role_policy" "default" {
-  count = local.create_policy && var.policy != null ? 1 : 0
-
-  name   = "LambdaRole-${var.name}"
-  role   = aws_iam_role.default[0].id
-  policy = var.policy
+  policy_arns = compact([
+    var.cloudwatch_logs ? "arn:aws:iam::aws:policy/service-role/AWSLambda${local.execution_type}ExecutionRole" : null,
+    var.tracing_config_mode != null ? "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess" : null,
+  ])
 }
 
 resource "aws_cloudwatch_log_group" "default" {
@@ -48,20 +36,6 @@ resource "aws_cloudwatch_log_group" "default" {
   kms_key_id        = var.kms_key_arn
   retention_in_days = var.log_retention
   tags              = var.tags
-}
-
-resource "aws_iam_role_policy_attachment" "default" {
-  count = local.create_policy && var.cloudwatch_logs ? 1 : 0
-
-  role       = aws_iam_role.default[0].id
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambda${local.execution_type}ExecutionRole"
-}
-
-resource "aws_iam_role_policy_attachment" "enable_xray_daemon_write" {
-  count = local.create_policy && var.tracing_config_mode != null ? 1 : 0
-
-  role       = aws_iam_role.default[0].id
-  policy_arn = "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"
 }
 
 data "aws_subnet" "selected" {
@@ -166,7 +140,7 @@ resource "aws_lambda_function" "default" {
   memory_size                    = var.memory_size
   publish                        = var.publish
   reserved_concurrent_executions = var.reserved_concurrency
-  role                           = var.role_arn != null ? var.role_arn : aws_iam_role.default[0].arn
+  role                           = var.role_arn != null ? var.role_arn : module.lambda_role[0].arn
   runtime                        = var.runtime
   s3_bucket                      = var.s3_bucket
   s3_key                         = var.s3_key
@@ -215,4 +189,24 @@ resource "aws_lambda_function" "default" {
       size = var.ephemeral_storage_size
     }
   }
+}
+
+moved {
+  from = aws_iam_role_policy.default[0]
+  to   = module.lambda_role[0].aws_iam_role_policy.default[0]
+}
+
+moved {
+  from = aws_iam_role.default[0]
+  to   = module.lambda_role[0].aws_iam_role.default
+}
+
+moved {
+  from = aws_iam_role_policy_attachment.default[0]
+  to   = module.lambda_role[0].aws_iam_role_policy_attachment.default["arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"]
+}
+
+moved {
+  from = aws_iam_role_policy_attachment.enable_xray_daemon_write[0]
+  to   = module.lambda_role[0].aws_iam_role_policy_attachment.default["arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"]
 }

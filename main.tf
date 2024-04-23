@@ -34,7 +34,7 @@ resource "aws_iam_role" "default" {
 }
 
 resource "aws_iam_role_policy" "default" {
-  count = local.create_policy && var.policy != null ? 1 : 0
+  count = local.create_policy ? 1 : 0
 
   name   = "LambdaRole-${var.name}"
   role   = aws_iam_role.default[0].id

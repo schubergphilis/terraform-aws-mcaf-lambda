@@ -15,7 +15,7 @@ module "lambda_role" {
 
   source                = "github.com/schubergphilis/terraform-aws-mcaf-role?ref=v0.3.3"
   name                  = join("-", compact([var.role_prefix, "LambdaRole", var.name]))
-  create_policy         = true
+  create_policy         = var.create_policy
   permissions_boundary  = var.permissions_boundary
   postfix               = false
   principal_identifiers = ["edgelambda.amazonaws.com", "lambda.amazonaws.com"]

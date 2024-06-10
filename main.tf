@@ -11,7 +11,7 @@ locals {
 }
 
 module "lambda_role" {
-  count = var.role_arn == null ? 1 : 0
+  count = length([var.role_arn]) == 0 ? 1 : 0
 
   source                = "github.com/schubergphilis/terraform-aws-mcaf-role?ref=v0.3.3"
   name                  = join("-", compact([var.role_prefix, "LambdaRole", var.name]))
@@ -140,7 +140,7 @@ resource "aws_lambda_function" "default" {
   memory_size                    = var.memory_size
   publish                        = var.publish
   reserved_concurrent_executions = var.reserved_concurrency
-  role                           = var.role_arn != null ? var.role_arn : module.lambda_role[0].arn
+  role                           = length([var.role_arn]) > 0 ? var.role_arn : module.lambda_role[0].arn
   runtime                        = var.runtime
   s3_bucket                      = var.s3_bucket
   s3_key                         = var.s3_key

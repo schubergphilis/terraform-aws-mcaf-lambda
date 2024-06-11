@@ -22,24 +22,21 @@ IMPORTANT: We do not pin modules to versions in our examples. We highly recommen
 
 ## Modules
 
-No modules.
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_lambda_role"></a> [lambda\_role](#module\_lambda\_role) | github.com/schubergphilis/terraform-aws-mcaf-role | v0.3.3 |
 
 ## Resources
 
 | Name | Type |
 |------|------|
 | [aws_cloudwatch_log_group.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
-| [aws_iam_role.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
-| [aws_iam_role_policy.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
-| [aws_iam_role_policy_attachment.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
-| [aws_iam_role_policy_attachment.enable_xray_daemon_write](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_lambda_function.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_function) | resource |
 | [aws_lambda_function_event_invoke_config.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_function_event_invoke_config) | resource |
 | [aws_s3_object.s3_dummy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_object) | resource |
 | [aws_security_group.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
 | [aws_vpc_security_group_egress_rule.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_security_group_egress_rule) | resource |
 | [archive_file.dummy](https://registry.terraform.io/providers/hashicorp/archive/latest/docs/data-sources/file) | data source |
-| [aws_iam_policy_document.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_subnet.selected](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnet) | data source |
 
 ## Inputs
@@ -65,7 +62,7 @@ No modules.
 | <a name="input_log_retention"></a> [log\_retention](#input\_log\_retention) | Number of days to retain log events in the specified log group | `number` | `365` | no |
 | <a name="input_memory_size"></a> [memory\_size](#input\_memory\_size) | The memory size of the lambda | `number` | `null` | no |
 | <a name="input_permissions_boundary"></a> [permissions\_boundary](#input\_permissions\_boundary) | The permissions boundary to set on the role | `string` | `null` | no |
-| <a name="input_policy"></a> [policy](#input\_policy) | A valid lambda policy JSON document. Required if you don't specify a role\_arn | `string` | `null` | no |
+| <a name="input_policy"></a> [policy](#input\_policy) | A valid lambda policy JSON document. This policy is used if you don't specify a role\_arn | `string` | `null` | no |
 | <a name="input_publish"></a> [publish](#input\_publish) | Whether to publish creation/change as new lambda function version | `bool` | `false` | no |
 | <a name="input_reserved_concurrency"></a> [reserved\_concurrency](#input\_reserved\_concurrency) | The amount of reserved concurrent executions for this lambda function | `number` | `null` | no |
 | <a name="input_retries"></a> [retries](#input\_retries) | Maximum number of retries for the Lambda invocation | `number` | `null` | no |

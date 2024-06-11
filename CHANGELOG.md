@@ -5,6 +5,20 @@ All notable changes to this project will automatically be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.4.0 - 2024-06-11
+
+### What's Changed
+
+#### 🚀 Features
+
+* feature: Refactor role and policy (#75) @fatbasstard
+
+#### 🐛 Bug Fixes
+
+* bug: Refactor role_arn variable to list of strings to cope with 'Invalid count' error (#76) @stefanwb
+
+**Full Changelog**: https://github.com/schubergphilis/terraform-aws-mcaf-lambda/compare/v1.3.0...v1.4.0
+
 ## v1.3.0 - 2024-04-16
 
 ### What's Changed

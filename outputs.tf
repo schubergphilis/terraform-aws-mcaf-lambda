@@ -19,7 +19,7 @@ output "qualified_arn" {
 }
 
 output "role_arn" {
-  value       = length([var.role_arn]) > 0 ? var.role_arn : module.lambda_role[0].arn
+  value       = length(compact([var.role_arn])) > 0 ? var.role_arn : module.lambda_role[0].arn
   description = "ARN of the lambda execution role"
 }
 

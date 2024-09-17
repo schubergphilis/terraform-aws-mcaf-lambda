@@ -4,6 +4,8 @@ Terraform module to create an AWS Lambda function.
 
 IMPORTANT: We do not pin modules to versions in our examples. We highly recommend that in your code you pin the version to the exact version you are using so that your infrastructure remains stable.
 
+IMPORTANT: exactly one of filename, image_uri, or s3_bucket must be specified when using the module.
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
@@ -24,7 +26,7 @@ IMPORTANT: We do not pin modules to versions in our examples. We highly recommen
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_lambda_role"></a> [lambda\_role](#module\_lambda\_role) | github.com/schubergphilis/terraform-aws-mcaf-role | v0.3.3 |
+| <a name="module_lambda_role"></a> [lambda\_role](#module\_lambda\_role) | schubergphilis/mcaf-role/aws | ~> 0.4.0 |
 
 ## Resources
 
@@ -57,6 +59,7 @@ IMPORTANT: We do not pin modules to versions in our examples. We highly recommen
 | <a name="input_ephemeral_storage_size"></a> [ephemeral\_storage\_size](#input\_ephemeral\_storage\_size) | The size of the Lambda function Ephemeral storage | `number` | `null` | no |
 | <a name="input_filename"></a> [filename](#input\_filename) | The path to the function's deployment package within the local filesystem | `string` | `null` | no |
 | <a name="input_handler"></a> [handler](#input\_handler) | The function entrypoint in your code | `string` | `"main.handler"` | no |
+| <a name="input_image_uri"></a> [image\_uri](#input\_image\_uri) | ECR image URI containing the function's deployment package. (must be internal ECR URI) | `string` | `null` | no |
 | <a name="input_kms_key_arn"></a> [kms\_key\_arn](#input\_kms\_key\_arn) | The ARN of the KMS key used to encrypt the cloudwatch log group and environment variables | `string` | `null` | no |
 | <a name="input_layers"></a> [layers](#input\_layers) | List of Lambda layer ARNs to be used by the Lambda function | `list(string)` | `[]` | no |
 | <a name="input_log_retention"></a> [log\_retention](#input\_log\_retention) | Number of days to retain log events in the specified log group | `number` | `365` | no |

@@ -81,6 +81,17 @@ variable "handler" {
   description = "The function entrypoint in your code"
 }
 
+variable "image_uri" {
+  type        = string
+  default     = null
+  description = "ECR image URI containing the function's deployment package. (must be internal ECR URI)"
+
+  validation {
+    condition     = var.image_uri == null || can(regex("^[0-9]{12}.dkr.ecr.[a-zA-Z0-9-]+.amazonaws.com/.+$", var.image_uri))
+    error_message = "The image_uri must be a valid ECR URI, or it can be left null."
+  }
+}
+
 variable "kms_key_arn" {
   type        = string
   default     = null
@@ -176,12 +187,6 @@ variable "s3_object_version" {
   description = "The object version containing the function's deployment package"
 }
 
-variable "security_group_ids" {
-  type        = list(string)
-  default     = []
-  description = "The security group(s) for running the Lambda within the VPC. If not specified a minimal default SG will be created"
-}
-
 variable "security_group_egress_rules" {
   type = list(object({
     cidr_ipv4                    = optional(string)
@@ -200,6 +205,12 @@ variable "security_group_egress_rules" {
     condition     = alltrue([for o in var.security_group_egress_rules : (o.cidr_ipv4 != null || o.cidr_ipv6 != null || o.prefix_list_id != null || o.referenced_security_group_id != null)])
     error_message = "Although \"cidr_ipv4\", \"cidr_ipv6\", \"prefix_list_id\", and \"referenced_security_group_id\" are all marked as optional, you must provide one of them in order to configure the destination of the traffic."
   }
+}
+
+variable "security_group_ids" {
+  type        = list(string)
+  default     = []
+  description = "The security group(s) for running the Lambda within the VPC. If not specified a minimal default SG will be created"
 }
 
 variable "security_group_name_prefix" {

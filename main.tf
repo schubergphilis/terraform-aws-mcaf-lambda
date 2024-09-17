@@ -13,7 +13,9 @@ locals {
 module "lambda_role" {
   count = length(compact([var.role_arn])) == 0 ? 1 : 0
 
-  source                = "github.com/schubergphilis/terraform-aws-mcaf-role?ref=v0.3.3"
+  source  = "schubergphilis/mcaf-role/aws"
+  version = "~> 0.4.0"
+
   name                  = join("-", compact([var.role_prefix, "LambdaRole", var.name]))
   create_policy         = var.create_policy
   permissions_boundary  = var.permissions_boundary
@@ -132,7 +134,8 @@ resource "aws_lambda_function" "default" {
   architectures                  = [var.architecture]
   code_signing_config_arn        = var.code_signing_config_arn
   description                    = var.description
-  filename                       = var.s3_bucket == null ? local.filename : null
+  filename                       = var.s3_bucket == null && var.image_uri == null ? local.filename : null
+  image_uri                      = var.image_uri != null ? var.image_uri : null
   function_name                  = var.name
   handler                        = var.handler
   kms_key_arn                    = var.environment != null ? var.kms_key_arn : null

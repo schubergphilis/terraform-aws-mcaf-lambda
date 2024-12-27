@@ -66,7 +66,7 @@ IMPORTANT: We do not pin modules to versions in our examples. We highly recommen
 | <a name="input_publish"></a> [publish](#input\_publish) | Whether to publish creation/change as new lambda function version | `bool` | `false` | no |
 | <a name="input_reserved_concurrency"></a> [reserved\_concurrency](#input\_reserved\_concurrency) | The amount of reserved concurrent executions for this lambda function | `number` | `null` | no |
 | <a name="input_retries"></a> [retries](#input\_retries) | Maximum number of retries for the Lambda invocation | `number` | `null` | no |
-| <a name="input_role_arn"></a> [role\_arn](#input\_role\_arn) | An optional lambda execution role | `string` | `null` | no |
+| <a name="input_role"></a> [role](#input\_role) | An optional lambda execution role | <pre>object({<br>    role_arn = string<br>  })</pre> | `null` | no |
 | <a name="input_role_prefix"></a> [role\_prefix](#input\_role\_prefix) | Default prefix for the role | `string` | `null` | no |
 | <a name="input_runtime"></a> [runtime](#input\_runtime) | The function runtime to use | `string` | `"python3.10"` | no |
 | <a name="input_s3_bucket"></a> [s3\_bucket](#input\_s3\_bucket) | The S3 bucket location containing the function's deployment package | `string` | `null` | no |

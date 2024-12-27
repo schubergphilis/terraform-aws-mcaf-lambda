@@ -140,10 +140,17 @@ variable "retries" {
   description = "Maximum number of retries for the Lambda invocation"
 }
 
-variable "role_arn" {
-  type        = string
+variable "role" {
+  type = object({
+    role_arn = string
+  })
   default     = null
   description = "An optional lambda execution role"
+
+  validation {
+    condition     = var.role == null || can(regex("^arn:aws:iam::[0-9]{12}:(role)/.+$", var.role.role_arn))
+    error_message = "If provided, role_arn must match an AWS Principal ARN"
+  }
 }
 
 variable "role_prefix" {

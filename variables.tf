@@ -21,12 +21,6 @@ variable "code_signing_config_arn" {
   description = "ARN for a Code Signing Configuration"
 }
 
-variable "create_policy" {
-  type        = bool
-  default     = null
-  description = "Overrule whether the Lambda role policy has to be created"
-}
-
 variable "create_s3_dummy_object" {
   type        = bool
   default     = true
@@ -67,6 +61,36 @@ variable "ephemeral_storage_size" {
   type        = number
   default     = null
   description = "The size of the Lambda function Ephemeral storage"
+}
+
+variable "execution_role" {
+  type = object({
+    additional_policy_arns = optional(set(string), [])
+    name_prefix            = optional(string)
+    path                   = optional(string, "/")
+    permissions_boundary   = optional(string)
+    policy                 = optional(string)
+  })
+  default     = {}
+  description = "Configuration for lambda execution IAM role"
+
+  validation {
+    condition     = can(regex("^/.*?/$", var.execution_role.path)) || var.execution_role.path == "/"
+    error_message = "The \"path\" must start and end with \"/\" or be \"/\"."
+  }
+}
+
+variable "execution_role_custom" {
+  type = object({
+    arn = string
+  })
+  default     = null
+  description = "Optional existing IAM role for Lambda execution. Overrides the role configured in the execution_role variable."
+
+  validation {
+    condition     = var.execution_role_custom == null || can(regex("^arn:aws:iam::[0-9]{12}:(role)/.+$", var.execution_role_custom.arn))
+    error_message = "If provided, \"arn\" must match an AWS Principal ARN"
+  }
 }
 
 variable "filename" {
@@ -110,18 +134,6 @@ variable "name" {
   description = "The name of the lambda"
 }
 
-variable "permissions_boundary" {
-  type        = string
-  default     = null
-  description = "The permissions boundary to set on the role"
-}
-
-variable "policy" {
-  type        = string
-  default     = null
-  description = "A valid lambda policy JSON document. This policy is used if you don't specify a role_arn"
-}
-
 variable "publish" {
   type        = bool
   default     = false
@@ -138,18 +150,6 @@ variable "retries" {
   type        = number
   default     = null
   description = "Maximum number of retries for the Lambda invocation"
-}
-
-variable "role_arn" {
-  type        = string
-  default     = null
-  description = "An optional lambda execution role"
-}
-
-variable "role_prefix" {
-  type        = string
-  description = "Default prefix for the role"
-  default     = null
 }
 
 variable "runtime" {

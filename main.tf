@@ -11,22 +11,24 @@ locals {
 }
 
 module "lambda_role" {
-  count = length(compact([var.role_arn])) == 0 ? 1 : 0
+  count = var.execution_role_custom == null ? 1 : 0
 
-  source                = "github.com/schubergphilis/terraform-aws-mcaf-role?ref=v0.3.3"
-  name                  = join("-", compact([var.role_prefix, "LambdaRole", var.name]))
-  create_policy         = var.create_policy
-  permissions_boundary  = var.permissions_boundary
+  source  = "schubergphilis/mcaf-role/aws"
+  version = "~> 0.4.0"
+
+  name                  = join("-", compact([var.execution_role.name_prefix, "LambdaRole", var.name]))
+  path                  = var.execution_role.path
+  permissions_boundary  = var.execution_role.permissions_boundary
   postfix               = false
   principal_identifiers = ["edgelambda.amazonaws.com", "lambda.amazonaws.com"]
   principal_type        = "Service"
-  role_policy           = var.policy
+  role_policy           = var.execution_role.policy
   tags                  = var.tags
 
-  policy_arns = compact([
+  policy_arns = setunion(compact([
     var.cloudwatch_logs ? "arn:aws:iam::aws:policy/service-role/AWSLambda${local.execution_type}ExecutionRole" : null,
     var.tracing_config_mode != null ? "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess" : null,
-  ])
+  ]), var.execution_role.additional_policy_arns)
 }
 
 resource "aws_cloudwatch_log_group" "default" {
@@ -140,7 +142,7 @@ resource "aws_lambda_function" "default" {
   memory_size                    = var.memory_size
   publish                        = var.publish
   reserved_concurrent_executions = var.reserved_concurrency
-  role                           = length(compact([var.role_arn])) > 0 ? var.role_arn : module.lambda_role[0].arn
+  role                           = var.execution_role_custom != null ? var.execution_role_custom.arn : module.lambda_role[0].arn
   runtime                        = var.runtime
   s3_bucket                      = var.s3_bucket
   s3_key                         = var.s3_key

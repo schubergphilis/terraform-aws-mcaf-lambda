@@ -2,7 +2,11 @@
 
 Terraform module to create an AWS Lambda function.
 
-IMPORTANT: We do not pin modules to versions in our examples. We highly recommend that in your code you pin the version to the exact version you are using so that your infrastructure remains stable.
+> [!TIP] 
+> We do not pin modules to versions in our examples. We highly recommend that in your code you pin the version to the exact version you are using so that your infrastructure remains stable.
+
+> [!IMPORTANT] 
+> Exactly one of `var.filename`, `var.image_config.uri`, or `var.s3_bucket` must be specified when using the module.
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements

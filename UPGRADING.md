@@ -23,6 +23,9 @@ The following variables have been removed:
 
 * `create_policy`. This variable is not deemed necessary anymore, creating the policy is controlled by providing an `execution_role.policy`.
 
+The following variable defaults have been modified:
+
+* `runtime` → default: `python3.13` (previous: `python3.10`).
 
 ## Upgrading to v1.0.0
 

@@ -19,7 +19,7 @@ output "qualified_arn" {
 }
 
 output "role_arn" {
-  value       = var.role != null ? var.role.role_arn : module.lambda_role[0].arn
+  value       = var.execution_role_custom != null ? var.execution_role_custom.arn : module.lambda_role[0].arn
   description = "ARN of the lambda execution role"
 }
 

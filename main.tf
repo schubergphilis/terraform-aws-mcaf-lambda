@@ -5,6 +5,7 @@ locals {
   ephemeral_storage          = var.ephemeral_storage_size != null ? { create : true } : {}
   execution_type             = var.subnet_ids == null ? "Basic" : "VPCAccess"
   filename                   = var.filename != null ? var.filename : data.archive_file.dummy.output_path
+  image_config               = var.image_config != null ? { create : true } : {}
   source_code_hash           = var.source_code_hash != null ? var.source_code_hash : var.filename != null ? filebase64sha256(var.filename) : null
   tracing_config             = var.tracing_config_mode != null ? { create : true } : {}
   vpc_config                 = var.subnet_ids != null ? { create : true } : {}
@@ -134,16 +135,18 @@ resource "aws_lambda_function" "default" {
   architectures                  = [var.architecture]
   code_signing_config_arn        = var.code_signing_config_arn
   description                    = var.description
-  filename                       = var.s3_bucket == null ? local.filename : null
+  filename                       = var.s3_bucket == null && var.image_config == null ? local.filename : null
   function_name                  = var.name
-  handler                        = var.handler
+  handler                        = var.package_type == "Zip" ? var.handler : null
+  image_uri                      = var.image_config != null ? var.image_config.uri : null
   kms_key_arn                    = var.environment != null ? var.kms_key_arn : null
   layers                         = var.layers
   memory_size                    = var.memory_size
+  package_type                   = var.package_type
   publish                        = var.publish
   reserved_concurrent_executions = var.reserved_concurrency
   role                           = var.execution_role_custom != null ? var.execution_role_custom.arn : module.lambda_role[0].arn
-  runtime                        = var.runtime
+  runtime                        = var.package_type == "Zip" ? var.runtime : null
   s3_bucket                      = var.s3_bucket
   s3_key                         = var.s3_key
   s3_object_version              = var.s3_object_version
@@ -167,6 +170,24 @@ resource "aws_lambda_function" "default" {
     }
   }
 
+  dynamic "ephemeral_storage" {
+    for_each = local.ephemeral_storage
+
+    content {
+      size = var.ephemeral_storage_size
+    }
+  }
+
+  dynamic "image_config" {
+    for_each = local.image_config
+
+    content {
+      command           = var.image_config.command
+      entry_point       = var.image_config.entry_point
+      working_directory = var.image_config.working_directory
+    }
+  }
+
   dynamic "tracing_config" {
     for_each = local.tracing_config
 
@@ -181,14 +202,6 @@ resource "aws_lambda_function" "default" {
     content {
       subnet_ids         = var.subnet_ids
       security_group_ids = length(var.security_group_ids) > 0 ? var.security_group_ids : [aws_security_group.default[0].id]
-    }
-  }
-
-  dynamic "ephemeral_storage" {
-    for_each = local.ephemeral_storage
-
-    content {
-      size = var.ephemeral_storage_size
     }
   }
 }

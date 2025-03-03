@@ -12,7 +12,7 @@ locals {
 }
 
 module "lambda_role" {
-  count = var.execution_role_custom == null ? 1 : 0
+  for_each = var.execution_role_custom == null ? toset(["lambda_role"]) : toset([])
 
   source  = "schubergphilis/mcaf-role/aws"
   version = "~> 0.4.0"

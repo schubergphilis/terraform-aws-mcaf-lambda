@@ -17,8 +17,8 @@ module "lambda_role" {
   source  = "schubergphilis/mcaf-role/aws"
   version = "~> 0.4.0"
 
-  create_policy         = var.execution_role.create_policy
   name                  = join("-", compact([var.execution_role.name_prefix, "LambdaRole", var.name]))
+  create_policy         = var.execution_role.create_policy
   path                  = var.execution_role.path
   permissions_boundary  = var.execution_role.permissions_boundary
   postfix               = false

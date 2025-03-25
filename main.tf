@@ -24,6 +24,7 @@ module "lambda_role" {
   principal_identifiers = ["edgelambda.amazonaws.com", "lambda.amazonaws.com"]
   principal_type        = "Service"
   role_policy           = var.execution_role.policy
+  create_policy         = var.create_policy
   tags                  = var.tags
 
   policy_arns = setunion(compact([

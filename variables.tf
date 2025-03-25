@@ -21,6 +21,12 @@ variable "code_signing_config_arn" {
   description = "ARN for a Code Signing Configuration"
 }
 
+variable "create_policy" {
+  type        = bool
+  default     = null
+  description = "Overrule whether the Lambda role policy has to be created"
+}
+
 variable "create_s3_dummy_object" {
   type        = bool
   default     = true

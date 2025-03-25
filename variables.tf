@@ -66,6 +66,7 @@ variable "ephemeral_storage_size" {
 variable "execution_role" {
   type = object({
     additional_policy_arns = optional(set(string), [])
+    create_policy          = optional(bool)
     name_prefix            = optional(string)
     path                   = optional(string, "/")
     permissions_boundary   = optional(string)

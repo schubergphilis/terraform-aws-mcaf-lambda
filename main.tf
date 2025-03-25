@@ -17,6 +17,7 @@ module "lambda_role" {
   source  = "schubergphilis/mcaf-role/aws"
   version = "~> 0.4.0"
 
+  create_policy         = var.execution_role.create_policy
   name                  = join("-", compact([var.execution_role.name_prefix, "LambdaRole", var.name]))
   path                  = var.execution_role.path
   permissions_boundary  = var.execution_role.permissions_boundary
@@ -24,7 +25,6 @@ module "lambda_role" {
   principal_identifiers = ["edgelambda.amazonaws.com", "lambda.amazonaws.com"]
   principal_type        = "Service"
   role_policy           = var.execution_role.policy
-  create_policy         = var.create_policy
   tags                  = var.tags
 
   policy_arns = setunion(compact([

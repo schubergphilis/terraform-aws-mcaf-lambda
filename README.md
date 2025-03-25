@@ -51,7 +51,6 @@ Terraform module to create an AWS Lambda function.
 | <a name="input_architecture"></a> [architecture](#input\_architecture) | Instruction set architecture of the Lambda function | `string` | `"x86_64"` | no |
 | <a name="input_cloudwatch_logs"></a> [cloudwatch\_logs](#input\_cloudwatch\_logs) | Whether or not to configure a CloudWatch log group | `bool` | `true` | no |
 | <a name="input_code_signing_config_arn"></a> [code\_signing\_config\_arn](#input\_code\_signing\_config\_arn) | ARN for a Code Signing Configuration | `string` | `null` | no |
-| <a name="input_create_policy"></a> [create\_policy](#input\_create\_policy) | Overrule whether the Lambda role policy has to be created | `bool` | `null` | no |
 | <a name="input_create_s3_dummy_object"></a> [create\_s3\_dummy\_object](#input\_create\_s3\_dummy\_object) | Whether or not to create a S3 dummy object | `bool` | `true` | no |
 | <a name="input_dead_letter_target_arn"></a> [dead\_letter\_target\_arn](#input\_dead\_letter\_target\_arn) | The ARN of an SNS topic or SQS queue to notify when an invocation fails | `string` | `null` | no |
 | <a name="input_description"></a> [description](#input\_description) | A description of the lambda | `string` | `""` | no |
@@ -59,7 +58,7 @@ Terraform module to create an AWS Lambda function.
 | <a name="input_destination_on_success"></a> [destination\_on\_success](#input\_destination\_on\_success) | ARN of the destination resource for successful asynchronous invocations | `string` | `null` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | A map of environment variables to assign to the lambda | `map(string)` | `null` | no |
 | <a name="input_ephemeral_storage_size"></a> [ephemeral\_storage\_size](#input\_ephemeral\_storage\_size) | The size of the Lambda function Ephemeral storage | `number` | `null` | no |
-| <a name="input_execution_role"></a> [execution\_role](#input\_execution\_role) | Configuration for lambda execution IAM role | <pre>object({<br/>    additional_policy_arns = optional(set(string), [])<br/>    name_prefix            = optional(string)<br/>    path                   = optional(string, "/")<br/>    permissions_boundary   = optional(string)<br/>    policy                 = optional(string)<br/>  })</pre> | `{}` | no |
+| <a name="input_execution_role"></a> [execution\_role](#input\_execution\_role) | Configuration for lambda execution IAM role | <pre>object({<br/>    additional_policy_arns = optional(set(string), [])<br/>    create_policy          = optional(bool)<br/>    name_prefix            = optional(string)<br/>    path                   = optional(string, "/")<br/>    permissions_boundary   = optional(string)<br/>    policy                 = optional(string)<br/>  })</pre> | `{}` | no |
 | <a name="input_execution_role_custom"></a> [execution\_role\_custom](#input\_execution\_role\_custom) | Optional existing IAM role for Lambda execution. Overrides the role configured in the execution\_role variable. | <pre>object({<br/>    arn = string<br/>  })</pre> | `null` | no |
 | <a name="input_filename"></a> [filename](#input\_filename) | The path to the function's deployment package within the local filesystem | `string` | `null` | no |
 | <a name="input_handler"></a> [handler](#input\_handler) | The function entrypoint in your code | `string` | `"main.handler"` | no |

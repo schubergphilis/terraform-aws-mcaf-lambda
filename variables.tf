@@ -270,3 +270,14 @@ variable "tracing_config_mode" {
     error_message = "If provided, allowed values are \"Active\" or \"PassThrough\"."
   }
 }
+
+variable "snap_start_apply_on" {
+  type        = string
+  default     = null
+  description = "The lambda's SnapStart configuration, currently only supported on certain runtimes"
+
+  validation {
+    condition     = var.snap_start_apply_on == null || var.snap_start_apply_on == "PublishedVersions"
+    error_message = "If provided, allowed value is \"PublishedVersions\"."
+  }
+}

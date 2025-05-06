@@ -9,6 +9,7 @@ locals {
   source_code_hash           = var.source_code_hash != null ? var.source_code_hash : var.filename != null ? filebase64sha256(var.filename) : null
   tracing_config             = var.tracing_config_mode != null ? { create : true } : {}
   vpc_config                 = var.subnet_ids != null ? { create : true } : {}
+  snap_start                 = var.snap_start_apply_on != null ? { create : true } : {}
 }
 
 module "lambda_role" {
@@ -186,6 +187,14 @@ resource "aws_lambda_function" "default" {
       command           = var.image_config.command
       entry_point       = var.image_config.entry_point
       working_directory = var.image_config.working_directory
+    }
+  }
+
+  dynamic "snap_start" {
+    for_each = local.snap_start
+
+    content {
+      apply_on = var.snap_start_apply_on
     }
   }
 

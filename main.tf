@@ -190,6 +190,14 @@ resource "aws_lambda_function" "default" {
     }
   }
 
+  dynamic "snap_start" {
+    for_each = local.snap_start
+
+    content {
+      apply_on = var.snap_start_apply_on
+    }
+  }
+
   dynamic "tracing_config" {
     for_each = local.tracing_config
 
@@ -204,14 +212,6 @@ resource "aws_lambda_function" "default" {
     content {
       subnet_ids         = var.subnet_ids
       security_group_ids = length(var.security_group_ids) > 0 ? var.security_group_ids : [aws_security_group.default[0].id]
-    }
-  }
-
-  dynamic "snap_start" {
-    for_each = local.snap_start
-
-    content {
-      apply_on = var.snap_start_apply_on
     }
   }
 }

@@ -236,6 +236,17 @@ variable "security_group_name_prefix" {
   description = "An optional prefix to create a unique name of the security group. If not provided `var.name` will be used"
 }
 
+variable "snap_start_apply_on" {
+  type        = string
+  default     = null
+  description = "The lambda's SnapStart configuration, currently only supported on certain runtimes"
+
+  validation {
+    condition     = var.snap_start_apply_on == null || var.snap_start_apply_on == "PublishedVersions"
+    error_message = "If provided, allowed value is \"PublishedVersions\"."
+  }
+}
+
 variable "source_code_hash" {
   type        = string
   default     = null
@@ -268,16 +279,5 @@ variable "tracing_config_mode" {
   validation {
     condition     = var.tracing_config_mode == null || var.tracing_config_mode == "Active" || var.tracing_config_mode == "PassThrough"
     error_message = "If provided, allowed values are \"Active\" or \"PassThrough\"."
-  }
-}
-
-variable "snap_start_apply_on" {
-  type        = string
-  default     = null
-  description = "The lambda's SnapStart configuration, currently only supported on certain runtimes"
-
-  validation {
-    condition     = var.snap_start_apply_on == null || var.snap_start_apply_on == "PublishedVersions"
-    error_message = "If provided, allowed value is \"PublishedVersions\"."
   }
 }

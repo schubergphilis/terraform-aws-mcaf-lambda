@@ -281,3 +281,9 @@ variable "tracing_config_mode" {
     error_message = "If provided, allowed values are \"Active\" or \"PassThrough\"."
   }
 }
+
+variable "vpc_id" {
+  type        = string
+  default     = null
+  description = "The ID of the VPC where this lambda needs to run"
+}

@@ -43,12 +43,6 @@ resource "aws_cloudwatch_log_group" "default" {
   tags              = var.tags
 }
 
-data "aws_subnet" "selected" {
-  count = var.subnet_ids != null ? 1 : 0
-
-  id = var.subnet_ids[0]
-}
-
 resource "aws_security_group" "default" {
   #checkov:skip=CKV2_AWS_5: False positive finding, the security group is attached.
   count = var.subnet_ids != null && length(var.security_group_ids) == 0 ? 1 : 0
@@ -56,7 +50,7 @@ resource "aws_security_group" "default" {
   name        = var.security_group_name_prefix == null ? var.name : null
   name_prefix = var.security_group_name_prefix != null ? var.security_group_name_prefix : null
   description = "Security group for lambda ${var.name}"
-  vpc_id      = data.aws_subnet.selected[0].vpc_id
+  vpc_id      = var.vpc_id
   tags        = var.tags
 
   lifecycle {

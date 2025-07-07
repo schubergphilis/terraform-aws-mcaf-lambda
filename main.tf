@@ -10,6 +10,7 @@ locals {
   tracing_config             = var.tracing_config_mode != null ? { create : true } : {}
   vpc_config                 = var.subnet_ids != null ? { create : true } : {}
   snap_start                 = var.snap_start_apply_on != null ? { create : true } : {}
+  vpc_id                     = var.vpc_id != null ? var.vpc_id : data.aws_subnet.selected[0].vpc_id
 }
 
 module "lambda_role" {
@@ -41,6 +42,12 @@ resource "aws_cloudwatch_log_group" "default" {
   kms_key_id        = var.kms_key_arn
   retention_in_days = var.log_retention
   tags              = var.tags
+}
+
+data "aws_subnet" "selected" {
+  count = var.subnet_ids != null ? 1 : 0
+
+  id = var.subnet_ids[0]
 }
 
 resource "aws_security_group" "default" {

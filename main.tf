@@ -57,7 +57,7 @@ resource "aws_security_group" "default" {
   name        = var.security_group_name_prefix == null ? var.name : null
   name_prefix = var.security_group_name_prefix != null ? var.security_group_name_prefix : null
   description = "Security group for lambda ${var.name}"
-  vpc_id      =  local.vpc_id
+  vpc_id      = local.vpc_id
   tags        = var.tags
 
   lifecycle {

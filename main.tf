@@ -10,6 +10,7 @@ locals {
   tracing_config             = var.tracing_config_mode != null ? { create : true } : {}
   vpc_config                 = var.subnet_ids != null ? { create : true } : {}
   snap_start                 = var.snap_start_apply_on != null ? { create : true } : {}
+  vpc_id                     = var.vpc_id != null ? var.vpc_id : data.aws_subnet.selected[0].vpc_id
 }
 
 module "lambda_role" {
@@ -56,7 +57,7 @@ resource "aws_security_group" "default" {
   name        = var.security_group_name_prefix == null ? var.name : null
   name_prefix = var.security_group_name_prefix != null ? var.security_group_name_prefix : null
   description = "Security group for lambda ${var.name}"
-  vpc_id      = data.aws_subnet.selected[0].vpc_id
+  vpc_id      =  local.vpc_id
   tags        = var.tags
 
   lifecycle {

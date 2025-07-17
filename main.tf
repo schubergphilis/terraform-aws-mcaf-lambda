@@ -10,7 +10,9 @@ locals {
   tracing_config             = var.tracing_config_mode != null ? { create : true } : {}
   vpc_config                 = var.subnet_ids != null ? { create : true } : {}
   snap_start                 = var.snap_start_apply_on != null ? { create : true } : {}
-  vpc_id                     = var.vpc_id != null ? var.vpc_id : data.aws_subnet.selected[0].vpc_id
+  vpc_id = var.vpc_id != null ? var.vpc_id : (
+    var.subnet_ids != null ? data.aws_subnet.selected[0].vpc_id : null
+  )
 }
 
 module "lambda_role" {

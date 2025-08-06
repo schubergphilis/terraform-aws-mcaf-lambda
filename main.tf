@@ -92,7 +92,7 @@ data "archive_file" "dummy" {
 }
 
 resource "aws_s3_object" "s3_dummy" {
-  count = var.s3_bucket != null && var.s3_key != null && var.create_s3_dummy_object ? 1 : 0
+  count = var.create_s3_dummy_object ? 1 : 0
 
   bucket = var.s3_bucket
   key    = var.s3_key

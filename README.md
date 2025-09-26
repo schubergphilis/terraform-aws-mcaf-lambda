@@ -15,20 +15,20 @@ Terraform module to create an AWS Lambda function.
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0 |
 | <a name="requirement_archive"></a> [archive](#requirement\_archive) | >= 2.0.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.76.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 6.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
 | <a name="provider_archive"></a> [archive](#provider\_archive) | >= 2.0.0 |
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.76.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | ~> 6.0 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_lambda_role"></a> [lambda\_role](#module\_lambda\_role) | schubergphilis/mcaf-role/aws | ~> 0.4.0 |
+| <a name="module_lambda_role"></a> [lambda\_role](#module\_lambda\_role) | schubergphilis/mcaf-role/aws | ~> 0.5.3 |
 
 ## Resources
 
@@ -68,6 +68,7 @@ Terraform module to create an AWS Lambda function.
 | <a name="input_memory_size"></a> [memory\_size](#input\_memory\_size) | The memory size of the lambda | `number` | `null` | no |
 | <a name="input_package_type"></a> [package\_type](#input\_package\_type) | The Lambda deployment package type. | `string` | `"Zip"` | no |
 | <a name="input_publish"></a> [publish](#input\_publish) | Whether to publish creation/change as new lambda function version | `bool` | `false` | no |
+| <a name="input_region"></a> [region](#input\_region) | The AWS region where resources will be created; if omitted the default provider region is used | `string` | `null` | no |
 | <a name="input_reserved_concurrency"></a> [reserved\_concurrency](#input\_reserved\_concurrency) | The amount of reserved concurrent executions for this lambda function | `number` | `null` | no |
 | <a name="input_retries"></a> [retries](#input\_retries) | Maximum number of retries for the Lambda invocation | `number` | `null` | no |
 | <a name="input_runtime"></a> [runtime](#input\_runtime) | The function runtime to use | `string` | `"python3.13"` | no |

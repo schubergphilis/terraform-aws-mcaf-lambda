@@ -154,7 +154,7 @@ resource "aws_lambda_function" "default" {
   s3_key                         = var.s3_key
   s3_object_version              = var.s3_object_version
   source_code_hash               = local.source_code_hash
-  tags                           = var.tags
+  tags                           = aws_cloudwatch_log_group.default.tags
   timeout                        = var.timeout
 
   dynamic "dead_letter_config" {

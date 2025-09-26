@@ -9,12 +9,6 @@ variable "architecture" {
   }
 }
 
-variable "cloudwatch_logs" {
-  type        = bool
-  default     = true
-  description = "Whether or not to configure a CloudWatch log group"
-}
-
 variable "code_signing_config_arn" {
   type        = string
   default     = null

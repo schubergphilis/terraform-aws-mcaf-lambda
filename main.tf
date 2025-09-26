@@ -32,14 +32,12 @@ module "lambda_role" {
   tags                  = var.tags
 
   policy_arns = setunion(compact([
-    var.cloudwatch_logs ? "arn:aws:iam::aws:policy/service-role/AWSLambda${local.execution_type}ExecutionRole" : null,
+    "arn:aws:iam::aws:policy/service-role/AWSLambda${local.execution_type}ExecutionRole",
     var.tracing_config_mode != null ? "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess" : null,
   ]), var.execution_role.additional_policy_arns)
 }
 
 resource "aws_cloudwatch_log_group" "default" {
-  count = var.cloudwatch_logs ? 1 : 0
-
   name              = "/aws/lambda/${var.name}"
   kms_key_id        = var.kms_key_arn
   retention_in_days = var.log_retention

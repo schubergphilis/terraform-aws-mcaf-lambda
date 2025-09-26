@@ -2,6 +2,18 @@
 
 This document captures required refactoring on your part when upgrading to a module version that contains breaking changes.
 
+## Upgrading to v3.0.0
+
+### Key Changes
+
+- This module now requires a minimum AWS provider version of 6.0 to support the `region` parameter. If you are using multiple AWS provider blocks, please read [migrating from multiple provider configurations](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/guides/enhanced-region-support#migrating-from-multiple-provider-configurations).
+- The Cloudwatch log group is now always created for the Lambda function to prevent the log group from being automatically created if the Lambda function is invoked before the log group is created by Terraform.
+
+#### Variables
+
+The following variable have been removed:
+
+* `cloudwatch_logs`. This variable is not deemed necessary anymore, a CloudWatch log group will always be created for the Lambda function.
 
 ## Upgrading to v2.0.0
 

@@ -38,6 +38,7 @@ module "lambda_role" {
 }
 
 resource "aws_cloudwatch_log_group" "default" {
+  region            = var.region
   name              = "/aws/lambda/${var.name}"
   kms_key_id        = var.kms_key_arn
   retention_in_days = var.log_retention
@@ -47,13 +48,15 @@ resource "aws_cloudwatch_log_group" "default" {
 data "aws_subnet" "selected" {
   count = var.subnet_ids != null ? 1 : 0
 
-  id = var.subnet_ids[0]
+  region = var.region
+  id     = var.subnet_ids[0]
 }
 
 resource "aws_security_group" "default" {
   #checkov:skip=CKV2_AWS_5: False positive finding, the security group is attached.
   count = var.subnet_ids != null && length(var.security_group_ids) == 0 ? 1 : 0
 
+  region      = var.region
   name        = var.security_group_name_prefix == null ? var.name : null
   name_prefix = var.security_group_name_prefix != null ? var.security_group_name_prefix : null
   description = "Security group for lambda ${var.name}"
@@ -68,6 +71,7 @@ resource "aws_security_group" "default" {
 resource "aws_vpc_security_group_egress_rule" "default" {
   for_each = var.subnet_ids != null && length(var.security_group_ids) == 0 && length(var.security_group_egress_rules) != 0 ? { for v in var.security_group_egress_rules : v.description => v } : {}
 
+  region                       = var.region
   cidr_ipv4                    = each.value.cidr_ipv4
   cidr_ipv6                    = each.value.cidr_ipv6
   description                  = each.value.description
@@ -92,6 +96,7 @@ data "archive_file" "dummy" {
 resource "aws_s3_object" "s3_dummy" {
   count = var.s3_bucket != null && var.s3_key != null && var.create_s3_dummy_object ? 1 : 0
 
+  region = var.region
   bucket = var.s3_bucket
   key    = var.s3_key
   source = data.archive_file.dummy.output_path
@@ -107,6 +112,7 @@ resource "aws_s3_object" "s3_dummy" {
 resource "aws_lambda_function_event_invoke_config" "default" {
   for_each = local.create_event_invoke_config
 
+  region                 = var.region
   function_name          = aws_lambda_function.default.function_name
   maximum_retry_attempts = var.retries
 
@@ -135,6 +141,7 @@ resource "aws_lambda_function_event_invoke_config" "default" {
 
 // tfsec:ignore:aws-lambda-enable-tracing
 resource "aws_lambda_function" "default" {
+  region                         = var.region
   architectures                  = [var.architecture]
   code_signing_config_arn        = var.code_signing_config_arn
   description                    = var.description

@@ -162,6 +162,12 @@ variable "publish" {
   description = "Whether to publish creation/change as new lambda function version"
 }
 
+variable "region" {
+  type        = string
+  default     = null
+  description = "The AWS region where the Lambda will be created. If omitted, the default provider region is used."
+}
+
 variable "reserved_concurrency" {
   type        = number
   default     = null

@@ -1,9 +1,9 @@
 locals {
   create_event_invoke_config = var.retries != null || var.destination_on_failure != null || var.destination_on_success != null ? { create : true } : {}
   dead_letter_config         = var.dead_letter_target_arn != null ? { create : true } : {}
+  durable_config             = var.durable_config != null ? { create : true } : {}
   environment                = var.environment != null ? { create : true } : {}
   ephemeral_storage          = var.ephemeral_storage_size != null ? { create : true } : {}
-  execution_type             = var.subnet_ids == null ? "Basic" : "VPCAccess"
   filename                   = var.filename != null ? var.filename : data.archive_file.dummy.output_path
   image_config               = var.image_config != null ? { create : true } : {}
   source_code_hash           = var.source_code_hash != null ? var.source_code_hash : var.filename != null ? filebase64sha256(var.filename) : null
@@ -32,8 +32,10 @@ module "lambda_role" {
   tags                  = var.tags
 
   policy_arns = setunion(compact([
-    "arn:aws:iam::aws:policy/service-role/AWSLambda${local.execution_type}ExecutionRole",
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     var.tracing_config_mode != null ? "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess" : null,
+    var.subnet_ids != null ? "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole" : null,
+    var.durable_config != null ? "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicDurableExecutionRolePolicy" : null
   ]), var.execution_role.additional_policy_arns)
 }
 
@@ -169,6 +171,15 @@ resource "aws_lambda_function" "default" {
 
     content {
       target_arn = var.dead_letter_target_arn
+    }
+  }
+
+  dynamic "durable_config" {
+    for_each = local.durable_config
+
+    content {
+      execution_timeout = var.durable_config.execution_timeout
+      retention_period  = var.durable_config.retention_period
     }
   }
 

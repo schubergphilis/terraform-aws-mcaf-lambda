@@ -45,6 +45,15 @@ variable "destination_on_success" {
   description = "ARN of the destination resource for successful asynchronous invocations"
 }
 
+variable "durable_config" {
+  type = object({
+    execution_timeout = number
+    retention_period  = number
+  })
+  default     = null
+  description = "Configuration for durable functions"
+}
+
 variable "environment" {
   type        = map(string)
   default     = null

@@ -1,3 +1,9 @@
+<!-- migrate-repo:banner -->
+> [!IMPORTANT]
+> **This repository has moved to [`schubergphilis-ep/terraform-aws-mcaf-lambda`](https://github.com/schubergphilis-ep/terraform-aws-mcaf-lambda).**
+> Please update your references and use the new location for issues, PRs, and contributions.
+<!-- migrate-repo:banner -->
+
 # terraform-aws-mcaf-lambda
 
 Terraform module to create an AWS Lambda function.
